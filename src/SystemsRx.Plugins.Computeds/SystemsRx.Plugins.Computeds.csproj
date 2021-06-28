@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.0.0</Version>
+        <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+        <Title>SystemsRx.Plugins.Computeds</Title>
+        <Authors>Grofit (LP)</Authors>
+        <PackageLicenseUrl>https://github.com/ecsrx/systemsrx/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/systemsrx</PackageProjectUrl>
+        <Description>SytemsRx plugin to provide the notion of computeds to the framework</Description>
+        <PackageTags>rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SystemsRx.MicroRx\SystemsRx.MicroRx.csproj" />
+      <ProjectReference Include="..\SystemsRx\SystemsRx.csproj" />
+      <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

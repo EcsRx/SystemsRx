@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>SystemsRx.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="System.Reactive.Core" Version="4.1.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj">
+      <Project>{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2}</Project>
+      <Name>EcsRx.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemsRx.Plugins.Computeds\SystemsRx.Plugins.Computeds.csproj" />
+    <ProjectReference Include="..\SystemsRx.ReactiveData\SystemsRx.ReactiveData.csproj" />
+  </ItemGroup>
+</Project>
