@@ -6,7 +6,7 @@ A general system execution framework with additional layers for `Application` sc
 [![Nuget Version][nuget-image]][nuget-url]
 [![Join Discord Chat][discord-image]][discord-url]
 
-> This originally was a core part of [EcsRx](https://github.com/EcsRx/ecsrx) however now lives as it's own repo
+> This originally was a core part of [EcsRx](https://github.com/EcsRx/ecsrx) however now lives as it's own repo, but EcsRx is built on top of this.
 
 ## Features
 
