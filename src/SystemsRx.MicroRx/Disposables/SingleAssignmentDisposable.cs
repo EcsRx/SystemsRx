@@ -4,30 +4,30 @@ namespace SystemsRx.MicroRx.Disposables
 {
     public class SingleAssignmentDisposable : IDisposable, ICancelable
     {
-        readonly object gate = new object();
-        IDisposable current;
-        bool disposed;
+        private readonly object _gate = new object();
+        private IDisposable _current;
+        private bool _disposed;
 
-        public bool IsDisposed { get { lock (gate) { return disposed; } } }
+        public bool IsDisposed
+        {
+            get { lock (_gate) { return _disposed; } }
+        }
 
         public IDisposable Disposable
         {
-            get
-            {
-                return current;
-            }
+            get => _current;
             set
             {
                 var old = default(IDisposable);
                 bool alreadyDisposed;
-                lock (gate)
+                lock (_gate)
                 {
-                    alreadyDisposed = disposed;
-                    old = current;
+                    alreadyDisposed = _disposed;
+                    old = _current;
                     if (!alreadyDisposed)
                     {
-                        if (value == null) return;
-                        current = value;
+                        if (value == null) { return; }
+                        _current = value;
                     }
                 }
 
@@ -37,26 +37,25 @@ namespace SystemsRx.MicroRx.Disposables
                     return;
                 }
 
-                if (old != null) throw new InvalidOperationException("Disposable is already set");
+                if (old != null) 
+                { throw new InvalidOperationException("Disposable is already set"); }
             }
         }
-
 
         public void Dispose()
         {
             IDisposable old = null;
 
-            lock (gate)
+            lock (_gate)
             {
-                if (!disposed)
+                if (!_disposed)
                 {
-                    disposed = true;
-                    old = current;
-                    current = null;
+                    _disposed = true;
+                    old = _current;
+                    _current = null;
                 }
             }
-
-            if (old != null) old.Dispose();
+            old?.Dispose();
         }
     }
 }

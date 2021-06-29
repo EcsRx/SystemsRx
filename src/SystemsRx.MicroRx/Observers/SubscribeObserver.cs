@@ -5,42 +5,36 @@ namespace SystemsRx.MicroRx.Observers
 {
     public class SubscribeObserver<T> : IObserver<T>
     {
-        readonly Action<T> onNext;
-        readonly Action<Exception> onError;
-        readonly Action onCompleted;
+        private readonly Action<T> _onNext;
+        private readonly Action<Exception> _onError;
+        private readonly Action _onCompleted;
 
-        int isStopped = 0;
+        private int _isStopped = 0;
 
         public SubscribeObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
         {
-            this.onNext = onNext;
-            this.onError = onError;
-            this.onCompleted = onCompleted;
+            _onNext = onNext;
+            _onError = onError;
+            _onCompleted = onCompleted;
         }
 
         public void OnNext(T value)
         {
-            if (isStopped == 0)
-            {
-                onNext(value);
-            }
+            if (_isStopped == 0)
+            { _onNext(value); }
         }
 
         public void OnError(Exception error)
         {
-            if (Interlocked.Increment(ref isStopped) == 1)
-            {
-                onError(error);
-            }
+            if (Interlocked.Increment(ref _isStopped) == 1)
+            { _onError(error); }
         }
 
 
         public void OnCompleted()
         {
-            if (Interlocked.Increment(ref isStopped) == 1)
-            {
-                onCompleted();
-            }
+            if (Interlocked.Increment(ref _isStopped) == 1)
+            { _onCompleted(); }
         }
     }
 }

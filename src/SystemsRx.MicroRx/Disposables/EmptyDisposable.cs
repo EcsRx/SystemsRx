@@ -4,7 +4,7 @@ namespace SystemsRx.MicroRx.Disposables
 {
     public class EmptyDisposable : IDisposable
     {
-        public static EmptyDisposable Singleton = new EmptyDisposable();
+        public static readonly EmptyDisposable Singleton = new EmptyDisposable();
 
         private EmptyDisposable()
         {

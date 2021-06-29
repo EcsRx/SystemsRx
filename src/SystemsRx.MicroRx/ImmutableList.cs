@@ -6,53 +6,50 @@ namespace SystemsRx.MicroRx
     {
         public static readonly ImmutableList<T> Empty = new ImmutableList<T>();
 
-        T[] data;
+        private readonly T[] _data;
 
-        public T[] Data
-        {
-            get { return data; }
-        }
+        public T[] Data => _data;
 
-        ImmutableList()
+        private ImmutableList()
         {
-            data = Array.Empty<T>();
+            _data = Array.Empty<T>();
         }
 
         public ImmutableList(T[] data)
         {
-            this.data = data;
+            _data = data;
         }
 
         public ImmutableList<T> Add(T value)
         {
-            var newData = new T[data.Length + 1];
-            Array.Copy(data, newData, data.Length);
-            newData[data.Length] = value;
+            var newData = new T[_data.Length + 1];
+            Array.Copy(_data, newData, _data.Length);
+            newData[_data.Length] = value;
             return new ImmutableList<T>(newData);
         }
 
         public ImmutableList<T> Remove(T value)
         {
             var i = IndexOf(value);
-            if (i < 0) return this;
+            if (i < 0) { return this; }
 
-            var length = data.Length;
-            if (length == 1) return Empty;
+            var length = _data.Length;
+            if (length == 1) { return Empty; }
 
             var newData = new T[length - 1];
-
-            Array.Copy(data, 0, newData, 0, i);
-            Array.Copy(data, i + 1, newData, i, length - i - 1);
+            Array.Copy(_data, 0, newData, 0, i);
+            Array.Copy(_data, i + 1, newData, i, length - i - 1);
 
             return new ImmutableList<T>(newData);
         }
 
         public int IndexOf(T value)
         {
-            for (var i = 0; i < data.Length; ++i)
+            for (var i = 0; i < _data.Length; ++i)
             {
                 // ImmutableList only use for IObserver(no worry for boxed)
-                if (Equals(data[i], value)) return i;
+                if (Equals(_data[i], value)) 
+                { return i; }
             }
             return -1;
         }

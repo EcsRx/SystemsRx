@@ -5,9 +5,9 @@ namespace SystemsRx.MicroRx
     [Serializable]
     public struct Unit : IEquatable<Unit>
     {
-        static readonly Unit @default = new Unit();
+        private static readonly Unit _default = new Unit();
 
-        public static Unit Default { get { return @default; } }
+        public static Unit Default => @_default;
 
         public static bool operator ==(Unit first, Unit second)
         {

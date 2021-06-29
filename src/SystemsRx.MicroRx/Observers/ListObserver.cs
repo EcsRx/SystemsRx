@@ -14,7 +14,7 @@ namespace SystemsRx.MicroRx.Observers
         public void OnCompleted()
         {
             var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++)
+            for (var i = 0; i < targetObservers.Length; i++)
             {
                 targetObservers[i].OnCompleted();
             }
@@ -23,7 +23,7 @@ namespace SystemsRx.MicroRx.Observers
         public void OnError(Exception error)
         {
             var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++)
+            for (var i = 0; i < targetObservers.Length; i++)
             {
                 targetObservers[i].OnError(error);
             }
@@ -32,7 +32,7 @@ namespace SystemsRx.MicroRx.Observers
         public void OnNext(T value)
         {
             var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++)
+            for (var i = 0; i < targetObservers.Length; i++)
             {
                 targetObservers[i].OnNext(value);
             }
@@ -46,17 +46,12 @@ namespace SystemsRx.MicroRx.Observers
         internal IObserver<T> Remove(IObserver<T> observer)
         {
             var i = Array.IndexOf(_observers.Data, observer);
-            if (i < 0)
-                return this;
+            if (i < 0) { return this; }
 
             if (_observers.Data.Length == 2)
-            {
-                return _observers.Data[1 - i];
-            }
-            else
-            {
-                return new ListObserver<T>(_observers.Remove(observer));
-            }
+            { return _observers.Data[1 - i]; }
+
+            return new ListObserver<T>(_observers.Remove(observer));
         }
     }
 }

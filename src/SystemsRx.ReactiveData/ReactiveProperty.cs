@@ -15,61 +15,46 @@ namespace SystemsRx.ReactiveData
     [Serializable]
     public class ReactiveProperty<T> : IReactiveProperty<T>
     {
-        static readonly IEqualityComparer<T> defaultEqualityComparer = EqualityComparer<T>.Default;
+        private static readonly IEqualityComparer<T> defaultEqualityComparer = EqualityComparer<T>.Default;
 
-        [NonSerialized]
-        bool canPublishValueOnSubscribe = false;
+        [NonSerialized] private bool _canPublishValueOnSubscribe = false;
+        [NonSerialized] private bool _isDisposed = false;
+        private T _value = default(T);
 
-        [NonSerialized]
-        bool isDisposed = false;
-
-        T value = default(T);
-
-        [NonSerialized]
-        Subject<T> publisher = null;
-
-        [NonSerialized]
-        IDisposable sourceConnection = null;
-
-        [NonSerialized]
-        Exception lastException = null;
+        [NonSerialized] private Subject<T> _publisher = null;
+        [NonSerialized] private IDisposable _sourceConnection = null;
+        [NonSerialized] private Exception _lastException = null;
 
         protected virtual IEqualityComparer<T> EqualityComparer => defaultEqualityComparer;
 
         public T Value
         {
-            get => value;
+            get => _value;
             set
             {
-                if (!canPublishValueOnSubscribe)
+                if (!_canPublishValueOnSubscribe)
                 {
-                    canPublishValueOnSubscribe = true;
+                    _canPublishValueOnSubscribe = true;
                     SetValue(value);
 
-                    if (isDisposed) return; // don't notify but set value
-                    var p = publisher;
-                    if (p != null)
-                    {
-                        p.OnNext(this.value);
-                    }
+                    if (_isDisposed) return; // don't notify but set value
+                    var p = _publisher;
+                    p?.OnNext(this._value);
                     return;
                 }
 
-                if (!EqualityComparer.Equals(this.value, value))
+                if (EqualityComparer.Equals(this._value, value)) { return; }
                 {
                     SetValue(value);
 
-                    if (isDisposed) return;
-                    var p = publisher;
-                    if (p != null)
-                    {
-                        p.OnNext(this.value);
-                    }
+                    if (_isDisposed) return;
+                    var p = _publisher;
+                    p?.OnNext(this._value);
                 }
             }
         }
 
-        public bool HasValue => canPublishValueOnSubscribe;
+        public bool HasValue => _canPublishValueOnSubscribe;
 
         public ReactiveProperty()
             : this(default(T))
@@ -81,71 +66,68 @@ namespace SystemsRx.ReactiveData
         public ReactiveProperty(T initialValue)
         {
             SetValue(initialValue);
-            canPublishValueOnSubscribe = true;
+            _canPublishValueOnSubscribe = true;
         }
 
         public ReactiveProperty(IObservable<T> source)
         {
             // initialized from source's ReactiveProperty `doesn't` publish value on subscribe.
-            // because there ReactiveProeprty is `Future/Task/Promise`.
+            // because there ReactiveProperty is `Future/Task/Promise`.
 
-            canPublishValueOnSubscribe = false;
-            sourceConnection = source.Subscribe(new ReactivePropertyObserver(this));
+            _canPublishValueOnSubscribe = false;
+            _sourceConnection = source.Subscribe(new ReactivePropertyObserver(this));
         }
 
         public ReactiveProperty(IObservable<T> source, T initialValue)
         {
-            canPublishValueOnSubscribe = false;
-            Value = initialValue; // Value set canPublishValueOnSubcribe = true
-            sourceConnection = source.Subscribe(new ReactivePropertyObserver(this));
+            _canPublishValueOnSubscribe = false;
+            Value = initialValue; // Value set canPublishValueOnSubscribe = true
+            _sourceConnection = source.Subscribe(new ReactivePropertyObserver(this));
         }
 
         protected virtual void SetValue(T value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public void SetValueAndForceNotify(T value)
         {
             SetValue(value);
 
-            if (isDisposed) return;
+            if (_isDisposed) return;
 
-            var p = publisher;
-            if (p != null)
-            {
-                p.OnNext(this.value);
-            }
+            var p = _publisher;
+            p?.OnNext(this._value);
         }
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (lastException != null)
+            if (_lastException != null)
             {
-                observer.OnError(lastException);
+                observer.OnError(_lastException);
                 return Disposable.Empty;
             }
 
-            if (isDisposed)
+            if (_isDisposed)
             {
                 observer.OnCompleted();
                 return Disposable.Empty;
             }
 
-            if (publisher == null)
+            if (_publisher == null)
             {
-                // Interlocked.CompareExchange is bit slower, guarantee threasafety is overkill.
+                // Interlocked.CompareExchange is bit slower, guarantee thread safety is overkill.
                 // System.Threading.Interlocked.CompareExchange(ref publisher, new Subject<T>(), null);
-                publisher = new Subject<T>();
+                _publisher = new Subject<T>();
             }
 
-            var p = publisher;
+            var p = _publisher;
             if (p != null)
             {
                 var subscription = p.Subscribe(observer);
-                if (canPublishValueOnSubscribe)
+                if (_canPublishValueOnSubscribe)
                 {
-                    observer.OnNext(value); // raise latest value on subscribe
+                    observer.OnNext(_value); // raise latest value on subscribe
                 }
                 return subscription;
             }
@@ -164,35 +146,31 @@ namespace SystemsRx.ReactiveData
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!isDisposed)
+            if (_isDisposed) { return; }
+            _isDisposed = true;
+            var sc = _sourceConnection;
+            if (sc != null)
             {
-                isDisposed = true;
-                var sc = sourceConnection;
-                if (sc != null)
-                {
-                    sc.Dispose();
-                    sourceConnection = null;
-                }
-                var p = publisher;
-                if (p != null)
-                {
-                    // when dispose, notify OnCompleted
-                    try
-                    {
-                        p.OnCompleted();
-                    }
-                    finally
-                    {
-                        p.Dispose();
-                        publisher = null;
-                    }
-                }
+                sc.Dispose();
+                _sourceConnection = null;
+            }
+            var p = _publisher;
+            if (p == null) { return; }
+            // when dispose, notify OnCompleted
+            try
+            {
+                p.OnCompleted();
+            }
+            finally
+            {
+                p.Dispose();
+                _publisher = null;
             }
         }
 
         public override string ToString()
         {
-            return (value == null) ? "(null)" : value.ToString();
+            return (_value == null) ? "(null)" : _value.ToString();
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -200,7 +178,7 @@ namespace SystemsRx.ReactiveData
             return false;
         }
 
-        class ReactivePropertyObserver : IObserver<T>
+        private class ReactivePropertyObserver : IObserver<T>
         {
             readonly ReactiveProperty<T> parent;
             int isStopped = 0;
@@ -217,30 +195,21 @@ namespace SystemsRx.ReactiveData
 
             public void OnError(Exception error)
             {
-                if (System.Threading.Interlocked.Increment(ref isStopped) == 1)
-                {
-                    parent.lastException = error;
-                    var p = parent.publisher;
-                    if (p != null)
-                    {
-                        p.OnError(error);
-                    }
-                    parent.Dispose(); // complete subscription
-                }
+                if (System.Threading.Interlocked.Increment(ref isStopped) != 1) { return; }
+                
+                parent._lastException = error;
+                var p = parent._publisher;
+                p?.OnError(error);
+                parent.Dispose(); // complete subscription
             }
 
             public void OnCompleted()
             {
-                if (System.Threading.Interlocked.Increment(ref isStopped) == 1)
-                {
-                    // source was completed but can publish from .Value yet.
-                    var sc = parent.sourceConnection;
-                    parent.sourceConnection = null;
-                    if (sc != null)
-                    {
-                        sc.Dispose();
-                    }
-                }
+                if (System.Threading.Interlocked.Increment(ref isStopped) != 1) { return; }
+                // source was completed but can publish from .Value yet.
+                var sc = parent._sourceConnection;
+                parent._sourceConnection = null;
+                sc?.Dispose();
             }
         }
     }

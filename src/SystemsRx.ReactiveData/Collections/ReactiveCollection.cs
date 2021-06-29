@@ -24,16 +24,14 @@ namespace SystemsRx.ReactiveData.Collections
 
         public ReactiveCollection(IEnumerable<T> collection)
         {
-            if (collection == null) throw new ArgumentNullException("collection");
+            if (collection == null) 
+            { throw new ArgumentNullException(nameof(collection)); }
 
             foreach (var item in collection)
-            {
-                Add(item);
-            }
+            { Add(item); }
         }
 
-        public ReactiveCollection(List<T> list)
-            : base(list != null ? new List<T>(list) : null)
+        public ReactiveCollection(List<T> list) : base(list != null ? new List<T>(list) : null)
         {
         }
 
@@ -42,19 +40,17 @@ namespace SystemsRx.ReactiveData.Collections
             var beforeCount = Count;
             base.ClearItems();
 
-            if (collectionReset != null) collectionReset.OnNext(Unit.Default);
+            _collectionReset?.OnNext(Unit.Default);
             if (beforeCount > 0)
-            {
-                if (countChanged != null) countChanged.OnNext(Count);
-            }
+            { _countChanged?.OnNext(Count); }
         }
 
         protected override void InsertItem(int index, T item)
         {
             base.InsertItem(index, item);
 
-            if (collectionAdd != null) collectionAdd.OnNext(new CollectionAddEvent<T>(index, item));
-            if (countChanged != null) countChanged.OnNext(Count);
+            _collectionAdd?.OnNext(new CollectionAddEvent<T>(index, item));
+            _countChanged?.OnNext(Count);
         }
 
         public void Move(int oldIndex, int newIndex)
@@ -64,38 +60,36 @@ namespace SystemsRx.ReactiveData.Collections
 
         protected virtual void MoveItem(int oldIndex, int newIndex)
         {
-            T item = this[oldIndex];
+            var item = this[oldIndex];
             base.RemoveItem(oldIndex);
             base.InsertItem(newIndex, item);
-
-            if (collectionMove != null) collectionMove.OnNext(new CollectionMoveEvent<T>(oldIndex, newIndex, item));
+            _collectionMove?.OnNext(new CollectionMoveEvent<T>(oldIndex, newIndex, item));
         }
 
         protected override void RemoveItem(int index)
         {
-            T item = this[index];
+            var item = this[index];
             base.RemoveItem(index);
 
-            if (collectionRemove != null) collectionRemove.OnNext(new CollectionRemoveEvent<T>(index, item));
-            if (countChanged != null) countChanged.OnNext(Count);
+            _collectionRemove?.OnNext(new CollectionRemoveEvent<T>(index, item));
+            _countChanged?.OnNext(Count);
         }
 
         protected override void SetItem(int index, T item)
         {
-            T oldItem = this[index];
+            var oldItem = this[index];
             base.SetItem(index, item);
-
-            if (collectionReplace != null) collectionReplace.OnNext(new CollectionReplaceEvent<T>(index, oldItem, item));
+            _collectionReplace?.OnNext(new CollectionReplaceEvent<T>(index, oldItem, item));
         }
 
 
-        [NonSerialized]
-        Subject<int> countChanged = null;
+        [NonSerialized] private Subject<int> _countChanged = null;
         public IObservable<int> ObserveCountChanged(bool notifyCurrentCount = false)
         {
-            if (isDisposed) return ImmutableEmptyObservable<int>.Instance;
+            if (isDisposed) 
+            { return ImmutableEmptyObservable<int>.Instance; }
 
-            var subject = countChanged ?? (countChanged = new Subject<int>());
+            var subject = _countChanged ?? (_countChanged = new Subject<int>());
             if (notifyCurrentCount)
             {
                 subject.OnNext(Count);
@@ -103,81 +97,74 @@ namespace SystemsRx.ReactiveData.Collections
             return subject;
         }
 
-        [NonSerialized]
-        Subject<Unit> collectionReset = null;
+        [NonSerialized] private Subject<Unit> _collectionReset = null;
         public IObservable<Unit> ObserveReset()
         {
             if (isDisposed) return ImmutableEmptyObservable<Unit>.Instance;
-            return collectionReset ?? (collectionReset = new Subject<Unit>());
+            return _collectionReset ?? (_collectionReset = new Subject<Unit>());
         }
 
-        [NonSerialized]
-        Subject<CollectionAddEvent<T>> collectionAdd = null;
+        [NonSerialized] private Subject<CollectionAddEvent<T>> _collectionAdd = null;
         public IObservable<CollectionAddEvent<T>> ObserveAdd()
         {
             if (isDisposed) return ImmutableEmptyObservable<CollectionAddEvent<T>>.Instance;
-            return collectionAdd ?? (collectionAdd = new Subject<CollectionAddEvent<T>>());
+            return _collectionAdd ?? (_collectionAdd = new Subject<CollectionAddEvent<T>>());
         }
 
-        [NonSerialized]
-        Subject<CollectionMoveEvent<T>> collectionMove = null;
+        [NonSerialized] private Subject<CollectionMoveEvent<T>> _collectionMove = null;
         public IObservable<CollectionMoveEvent<T>> ObserveMove()
         {
             if (isDisposed) return ImmutableEmptyObservable<CollectionMoveEvent<T>>.Instance;
-            return collectionMove ?? (collectionMove = new Subject<CollectionMoveEvent<T>>());
+            return _collectionMove ?? (_collectionMove = new Subject<CollectionMoveEvent<T>>());
         }
 
-        [NonSerialized]
-        Subject<CollectionRemoveEvent<T>> collectionRemove = null;
+        [NonSerialized] private Subject<CollectionRemoveEvent<T>> _collectionRemove = null;
         public IObservable<CollectionRemoveEvent<T>> ObserveRemove()
         {
             if (isDisposed) return ImmutableEmptyObservable<CollectionRemoveEvent<T>>.Instance;
-            return collectionRemove ?? (collectionRemove = new Subject<CollectionRemoveEvent<T>>());
+            return _collectionRemove ?? (_collectionRemove = new Subject<CollectionRemoveEvent<T>>());
         }
 
-        [NonSerialized]
-        Subject<CollectionReplaceEvent<T>> collectionReplace = null;
+        [NonSerialized] private Subject<CollectionReplaceEvent<T>> _collectionReplace = null;
         public IObservable<CollectionReplaceEvent<T>> ObserveReplace()
         {
             if (isDisposed) return ImmutableEmptyObservable<CollectionReplaceEvent<T>>.Instance;
-            return collectionReplace ?? (collectionReplace = new Subject<CollectionReplaceEvent<T>>());
+            return _collectionReplace ?? (_collectionReplace = new Subject<CollectionReplaceEvent<T>>());
         }
 
         void DisposeSubject<TSubject>(ref Subject<TSubject> subject)
         {
-            if (subject != null)
+            if (subject == null) { return; }
+            
+            try
             {
-                try
-                {
-                    subject.OnCompleted();
-                }
-                finally
-                {
-                    subject.Dispose();
-                    subject = null;
-                }
+                subject.OnCompleted();
+            }
+            finally
+            {
+                subject.Dispose();
+                subject = null;
             }
         }
 
         #region IDisposable Support
 
-        private bool disposedValue = false;
+        private bool _disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue) { return; }
+            
+            if (disposing)
             {
-                if (disposing)
-                {
-                    DisposeSubject(ref collectionReset);
-                    DisposeSubject(ref collectionAdd);
-                    DisposeSubject(ref collectionMove);
-                    DisposeSubject(ref collectionRemove);
-                    DisposeSubject(ref collectionReplace);
-                }
-
-                disposedValue = true;
+                DisposeSubject(ref _collectionReset);
+                DisposeSubject(ref _collectionAdd);
+                DisposeSubject(ref _collectionMove);
+                DisposeSubject(ref _collectionRemove);
+                DisposeSubject(ref _collectionReplace);
             }
+
+            _disposedValue = true;
         }
 
         public void Dispose()

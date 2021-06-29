@@ -6,7 +6,7 @@ namespace SystemsRx.MicroRx.Observers
     {
         public static readonly DisposedObserver<T> Instance = new DisposedObserver<T>();
 
-        DisposedObserver()
+        private DisposedObserver()
         {
 
         }

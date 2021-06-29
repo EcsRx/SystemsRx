@@ -10,7 +10,7 @@ namespace SystemsRx.MicroRx.Observers
     {
         public static readonly EmptyObserver<T> Instance = new EmptyObserver<T>();
 
-        EmptyObserver()
+        private EmptyObserver()
         {
 
         }

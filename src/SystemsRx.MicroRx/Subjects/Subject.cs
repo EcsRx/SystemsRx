@@ -10,26 +10,26 @@ namespace SystemsRx.MicroRx.Subjects
 {
     public sealed class Subject<T> : ISubject<T>, IDisposable
     {
-        object observerLock = new object();
+        private readonly object _observerLock = new object();
 
-        bool isStopped;
-        bool isDisposed;
-        Exception lastError;
-        IObserver<T> outObserver = EmptyObserver<T>.Instance;
+        private bool _isStopped;
+        private bool _isDisposed;
+        private Exception _lastError;
+        private IObserver<T> _outObserver = EmptyObserver<T>.Instance;
 
-        public bool HasObservers => !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
+        public bool HasObservers => !(_outObserver is EmptyObserver<T>) && !_isStopped && !_isDisposed;
 
         public void OnCompleted()
         {
             IObserver<T> old;
-            lock (observerLock)
+            lock (_observerLock)
             {
                 ThrowIfDisposed();
-                if (isStopped) return;
+                if (_isStopped) { return; }
 
-                old = outObserver;
-                outObserver = EmptyObserver<T>.Instance;
-                isStopped = true;
+                old = _outObserver;
+                _outObserver = EmptyObserver<T>.Instance;
+                _isStopped = true;
             }
 
             old.OnCompleted();
@@ -37,18 +37,19 @@ namespace SystemsRx.MicroRx.Subjects
 
         public void OnError(Exception error)
         {
-            if (error == null) throw new ArgumentNullException("error");
-
+            if (error == null)
+            { throw new ArgumentNullException(nameof(error)); }
+            
             IObserver<T> old;
-            lock (observerLock)
+            lock (_observerLock)
             {
                 ThrowIfDisposed();
-                if (isStopped) return;
+                if (_isStopped) { return; }
 
-                old = outObserver;
-                outObserver = EmptyObserver<T>.Instance;
-                isStopped = true;
-                lastError = error;
+                old = _outObserver;
+                _outObserver = EmptyObserver<T>.Instance;
+                _isStopped = true;
+                _lastError = error;
             }
 
             old.OnError(error);
@@ -56,68 +57,58 @@ namespace SystemsRx.MicroRx.Subjects
 
         public void OnNext(T value)
         {
-            outObserver.OnNext(value);
+            _outObserver.OnNext(value);
         }
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer == null) throw new ArgumentNullException("observer");
+            if (observer == null) 
+            { throw new ArgumentNullException(nameof(observer)); }
 
             var ex = default(Exception);
 
-            lock (observerLock)
+            lock (_observerLock)
             {
                 ThrowIfDisposed();
-                if (!isStopped)
+                if (!_isStopped)
                 {
-                    var listObserver = outObserver as ListObserver<T>;
-                    if (listObserver != null)
-                    {
-                        outObserver = listObserver.Add(observer);
-                    }
+                    if (_outObserver is ListObserver<T> listObserver)
+                    { _outObserver = listObserver.Add(observer); }
                     else
                     {
-                        var current = outObserver;
+                        var current = _outObserver;
                         if (current is EmptyObserver<T>)
-                        {
-                            outObserver = observer;
-                        }
+                        { _outObserver = observer; }
                         else
-                        {
-                            outObserver = new ListObserver<T>(new ImmutableList<IObserver<T>>(new[] { current, observer }));
-                        }
+                        { _outObserver = new ListObserver<T>(new ImmutableList<IObserver<T>>(new[] { current, observer })); }
                     }
 
                     return new Subscription(this, observer);
                 }
 
-                ex = lastError;
+                ex = _lastError;
             }
 
             if (ex != null)
-            {
-                observer.OnError(ex);
-            }
+            { observer.OnError(ex); }
             else
-            {
-                observer.OnCompleted();
-            }
+            { observer.OnCompleted(); }
 
             return Disposable.Empty;
         }
 
         public void Dispose()
         {
-            lock (observerLock)
+            lock (_observerLock)
             {
-                isDisposed = true;
-                outObserver = DisposedObserver<T>.Instance;
+                _isDisposed = true;
+                _outObserver = DisposedObserver<T>.Instance;
             }
         }
 
-        void ThrowIfDisposed()
+        private void ThrowIfDisposed()
         {
-            if (isDisposed) throw new ObjectDisposedException("");
+            if (_isDisposed) throw new ObjectDisposedException("");
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
@@ -125,39 +116,33 @@ namespace SystemsRx.MicroRx.Subjects
             return false;
         }
 
-        class Subscription : IDisposable
+        private class Subscription : IDisposable
         {
-            readonly object gate = new object();
-            Subject<T> parent;
-            IObserver<T> unsubscribeTarget;
+            private readonly object _gate = new object();
+            private Subject<T> _parent;
+            private IObserver<T> _unsubscribeTarget;
 
             public Subscription(Subject<T> parent, IObserver<T> unsubscribeTarget)
             {
-                this.parent = parent;
-                this.unsubscribeTarget = unsubscribeTarget;
+                _parent = parent;
+                _unsubscribeTarget = unsubscribeTarget;
             }
 
             public void Dispose()
             {
-                lock (gate)
+                lock (_gate)
                 {
-                    if (parent != null)
+                    if (_parent == null) { return; }
+                    
+                    lock (_parent._observerLock)
                     {
-                        lock (parent.observerLock)
-                        {
-                            var listObserver = parent.outObserver as ListObserver<T>;
-                            if (listObserver != null)
-                            {
-                                parent.outObserver = listObserver.Remove(unsubscribeTarget);
-                            }
-                            else
-                            {
-                                parent.outObserver = EmptyObserver<T>.Instance;
-                            }
+                        if (_parent._outObserver is ListObserver<T> listObserver)
+                        { _parent._outObserver = listObserver.Remove(_unsubscribeTarget); }
+                        else
+                        { _parent._outObserver = EmptyObserver<T>.Instance; }
 
-                            unsubscribeTarget = null;
-                            parent = null;
-                        }
+                        _unsubscribeTarget = null;
+                        _parent = null;
                     }
                 }
             }

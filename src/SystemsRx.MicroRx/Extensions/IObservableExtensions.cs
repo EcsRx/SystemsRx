@@ -14,13 +14,11 @@ namespace SystemsRx.MicroRx.Extensions
             return source.Subscribe(CreateSubscribeObserver(onNext, Stubs.Throw, Stubs.Nop));
         }
 
-        internal static IObserver<T> CreateSubscribeObserver<T>(Action<T> onNext, Action<Exception> onError, Action onCompleted)
+        private static IObserver<T> CreateSubscribeObserver<T>(Action<T> onNext, Action<Exception> onError, Action onCompleted)
         {
             // need compare for avoid iOS AOT
             if (onNext == Stubs<T>.Ignore)
-            {
-                return new StubbedSubscribeObserver<T>(onError, onCompleted);
-            }
+            { return new StubbedSubscribeObserver<T>(onError, onCompleted); }
 
             return new SubscribeObserver<T>(onNext, onError, onCompleted);
         }

@@ -32,7 +32,7 @@ namespace SystemsRx.MicroRx.Disposables
         public CompositeDisposable(int capacity)
         {
             if (capacity < 0)
-                throw new ArgumentOutOfRangeException("capacity");
+            { throw new ArgumentOutOfRangeException(nameof(capacity)); }
 
             _disposables = new List<IDisposable>(capacity);
         }
@@ -45,7 +45,7 @@ namespace SystemsRx.MicroRx.Disposables
         public CompositeDisposable(params IDisposable[] disposables)
         {
             if (disposables == null)
-                throw new ArgumentNullException("disposables");
+            { throw new ArgumentNullException(nameof(disposables)); }
 
             _disposables = new List<IDisposable>(disposables);
             _count = _disposables.Count;
@@ -59,7 +59,7 @@ namespace SystemsRx.MicroRx.Disposables
         public CompositeDisposable(IEnumerable<IDisposable> disposables)
         {
             if (disposables == null)
-                throw new ArgumentNullException("disposables");
+            { throw new ArgumentNullException(nameof(disposables)); }
 
             _disposables = new List<IDisposable>(disposables);
             _count = _disposables.Count;
@@ -68,13 +68,7 @@ namespace SystemsRx.MicroRx.Disposables
         /// <summary>
         /// Gets the number of disposables contained in the CompositeDisposable.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _count;
-            }
-        }
+        public int Count => _count;
 
         /// <summary>
         /// Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
@@ -84,7 +78,7 @@ namespace SystemsRx.MicroRx.Disposables
         public void Add(IDisposable item)
         {
             if (item == null)
-                throw new ArgumentNullException("item");
+            { throw new ArgumentNullException(nameof(item)); }
 
             bool shouldDispose;
             lock (_gate)
@@ -97,7 +91,7 @@ namespace SystemsRx.MicroRx.Disposables
                 }
             }
             if (shouldDispose)
-                item.Dispose();
+            { item.Dispose(); }
         }
 
         /// <summary>
@@ -109,7 +103,7 @@ namespace SystemsRx.MicroRx.Disposables
         public bool Remove(IDisposable item)
         {
             if (item == null)
-                throw new ArgumentNullException("item");
+            { throw new ArgumentNullException(nameof(item)); }
 
             var shouldDispose = false;
 
@@ -137,15 +131,18 @@ namespace SystemsRx.MicroRx.Disposables
                             _disposables = new List<IDisposable>(_disposables.Capacity / 2);
 
                             foreach (var d in old)
+                            {
                                 if (d != null)
-                                    _disposables.Add(d);
+                                { _disposables.Add(d); }
+                                
+                            }
                         }
                     }
                 }
             }
 
             if (shouldDispose)
-                item.Dispose();
+            { item.Dispose(); }
 
             return shouldDispose;
         }
@@ -170,8 +167,10 @@ namespace SystemsRx.MicroRx.Disposables
             if (currentDisposables != null)
             {
                 foreach (var d in currentDisposables)
+                {
                     if (d != null)
-                        d.Dispose();
+                    { d.Dispose(); }
+                }
             }
         }
 
@@ -189,8 +188,7 @@ namespace SystemsRx.MicroRx.Disposables
             }
 
             foreach (var d in currentDisposables)
-                if (d != null)
-                    d.Dispose();
+            { d?.Dispose(); }
         }
 
         /// <summary>
@@ -202,7 +200,7 @@ namespace SystemsRx.MicroRx.Disposables
         public bool Contains(IDisposable item)
         {
             if (item == null)
-                throw new ArgumentNullException("item");
+            { throw new ArgumentNullException(nameof(item)); }
 
             lock (_gate)
             {
@@ -220,16 +218,18 @@ namespace SystemsRx.MicroRx.Disposables
         public void CopyTo(IDisposable[] array, int arrayIndex)
         {
             if (array == null)
-                throw new ArgumentNullException("array");
+            { throw new ArgumentNullException(nameof(array)); }
+            
             if (arrayIndex < 0 || arrayIndex >= array.Length)
-                throw new ArgumentOutOfRangeException("arrayIndex");
+            { throw new ArgumentOutOfRangeException(nameof(arrayIndex)); }
 
             lock (_gate)
             {
                 var disArray = new List<IDisposable>();
                 foreach (var item in _disposables)
                 {
-                    if (item != null) disArray.Add(item);
+                    if (item != null) 
+                    { disArray.Add(item); }
                 }
 
                 Array.Copy(disArray.ToArray(), 0, array, arrayIndex, array.Length - arrayIndex);
@@ -253,7 +253,8 @@ namespace SystemsRx.MicroRx.Disposables
             {
                 foreach (var d in _disposables)
                 {
-                    if (d != null) res.Add(d);
+                    if (d != null) 
+                    { res.Add(d); }
                 }
             }
 

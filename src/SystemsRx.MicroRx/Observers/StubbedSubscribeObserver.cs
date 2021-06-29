@@ -5,15 +5,15 @@ namespace SystemsRx.MicroRx.Observers
 {
     class StubbedSubscribeObserver<T> : IObserver<T>
     {
-        readonly Action<Exception> onError;
-        readonly Action onCompleted;
+        private readonly Action<Exception> _onError;
+        private readonly Action _onCompleted;
 
-        int isStopped = 0;
+        private int _isStopped = 0;
 
         public StubbedSubscribeObserver(Action<Exception> onError, Action onCompleted)
         {
-            this.onError = onError;
-            this.onCompleted = onCompleted;
+            _onError = onError;
+            _onCompleted = onCompleted;
         }
 
         public void OnNext(T value)
@@ -22,18 +22,14 @@ namespace SystemsRx.MicroRx.Observers
 
         public void OnError(Exception error)
         {
-            if (Interlocked.Increment(ref isStopped) == 1)
-            {
-                onError(error);
-            }
+            if (Interlocked.Increment(ref _isStopped) == 1)
+            { _onError(error); }
         }
 
         public void OnCompleted()
         {
-            if (Interlocked.Increment(ref isStopped) == 1)
-            {
-                onCompleted();
-            }
+            if (Interlocked.Increment(ref _isStopped) == 1)
+            { _onCompleted(); }
         }
     }
 }

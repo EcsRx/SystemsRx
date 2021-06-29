@@ -5,16 +5,16 @@ namespace SystemsRx.MicroRx.Operators
 {
     public abstract class OperatorObservableBase<T> : IObservable<T>
     {
-        readonly bool isRequiredSubscribeOnCurrentThread;
+        private readonly bool _isRequiredSubscribeOnCurrentThread;
 
-        public OperatorObservableBase(bool isRequiredSubscribeOnCurrentThread)
+        protected OperatorObservableBase(bool isRequiredSubscribeOnCurrentThread)
         {
-            this.isRequiredSubscribeOnCurrentThread = isRequiredSubscribeOnCurrentThread;
+            _isRequiredSubscribeOnCurrentThread = isRequiredSubscribeOnCurrentThread;
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()
         {
-            return isRequiredSubscribeOnCurrentThread;
+            return _isRequiredSubscribeOnCurrentThread;
         }
 
         public IDisposable Subscribe(IObserver<T> observer)

@@ -5,9 +5,9 @@ namespace SystemsRx.MicroRx.Operators
 {
     public class ImmutableEmptyObservable<T> : IObservable<T>
     {
-        public static ImmutableEmptyObservable<T> Instance = new ImmutableEmptyObservable<T>();
+        public static readonly ImmutableEmptyObservable<T> Instance = new ImmutableEmptyObservable<T>();
 
-        ImmutableEmptyObservable()
+        private ImmutableEmptyObservable()
         {
 
         }
