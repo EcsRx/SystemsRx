@@ -150,35 +150,35 @@ namespace SystemsRx.ReactiveData.Dictionaries
         [NonSerialized] private Subject<int> _countChanged = null;
         public IObservable<int> ObserveCountChanged()
         {
-            if (_isDisposed) return ImmutableEmptyObservable<int>.Instance;
+            if (_isDisposed) { return ImmutableEmptyObservable<int>.Instance; }
             return _countChanged ?? (_countChanged = new Subject<int>());
         }
 
         [NonSerialized] private Subject<Unit> _collectionReset = null;
         public IObservable<Unit> ObserveReset()
         {
-            if (_isDisposed) return ImmutableEmptyObservable<Unit>.Instance;
+            if (_isDisposed) { return ImmutableEmptyObservable<Unit>.Instance; }
             return _collectionReset ?? (_collectionReset = new Subject<Unit>());
         }
 
         [NonSerialized] private Subject<DictionaryAddEvent<TKey, TValue>> _dictionaryAdd = null;
         public IObservable<DictionaryAddEvent<TKey, TValue>> ObserveAdd()
         {
-            if (_isDisposed) return ImmutableEmptyObservable<DictionaryAddEvent<TKey, TValue>>.Instance;
+            if (_isDisposed) { return ImmutableEmptyObservable<DictionaryAddEvent<TKey, TValue>>.Instance; }
             return _dictionaryAdd ?? (_dictionaryAdd = new Subject<DictionaryAddEvent<TKey, TValue>>());
         }
 
         [NonSerialized] private Subject<DictionaryRemoveEvent<TKey, TValue>> _dictionaryRemove = null;
         public IObservable<DictionaryRemoveEvent<TKey, TValue>> ObserveRemove()
         {
-            if (_isDisposed) return ImmutableEmptyObservable<DictionaryRemoveEvent<TKey, TValue>>.Instance;
+            if (_isDisposed) { return ImmutableEmptyObservable<DictionaryRemoveEvent<TKey, TValue>>.Instance; }
             return _dictionaryRemove ?? (_dictionaryRemove = new Subject<DictionaryRemoveEvent<TKey, TValue>>());
         }
 
         [NonSerialized] private Subject<DictionaryReplaceEvent<TKey, TValue>> _dictionaryReplace = null;
         public IObservable<DictionaryReplaceEvent<TKey, TValue>> ObserveReplace()
         {
-            if (_isDisposed) return ImmutableEmptyObservable<DictionaryReplaceEvent<TKey, TValue>>.Instance;
+            if (_isDisposed) { return ImmutableEmptyObservable<DictionaryReplaceEvent<TKey, TValue>>.Instance; }
             return _dictionaryReplace ?? (_dictionaryReplace = new Subject<DictionaryReplaceEvent<TKey, TValue>>());
         }
 

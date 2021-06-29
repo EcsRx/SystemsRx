@@ -108,7 +108,8 @@ namespace SystemsRx.MicroRx.Subjects
 
         private void ThrowIfDisposed()
         {
-            if (_isDisposed) throw new ObjectDisposedException("");
+            if (_isDisposed)
+            { throw new ObjectDisposedException(""); }
         }
 
         public bool IsRequiredSubscribeOnCurrentThread()

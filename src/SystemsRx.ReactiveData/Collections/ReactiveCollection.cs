@@ -100,39 +100,39 @@ namespace SystemsRx.ReactiveData.Collections
         [NonSerialized] private Subject<Unit> _collectionReset = null;
         public IObservable<Unit> ObserveReset()
         {
-            if (isDisposed) return ImmutableEmptyObservable<Unit>.Instance;
+            if (isDisposed) { return ImmutableEmptyObservable<Unit>.Instance; }
             return _collectionReset ?? (_collectionReset = new Subject<Unit>());
         }
 
         [NonSerialized] private Subject<CollectionAddEvent<T>> _collectionAdd = null;
         public IObservable<CollectionAddEvent<T>> ObserveAdd()
         {
-            if (isDisposed) return ImmutableEmptyObservable<CollectionAddEvent<T>>.Instance;
+            if (isDisposed) { return ImmutableEmptyObservable<CollectionAddEvent<T>>.Instance; }
             return _collectionAdd ?? (_collectionAdd = new Subject<CollectionAddEvent<T>>());
         }
 
         [NonSerialized] private Subject<CollectionMoveEvent<T>> _collectionMove = null;
         public IObservable<CollectionMoveEvent<T>> ObserveMove()
         {
-            if (isDisposed) return ImmutableEmptyObservable<CollectionMoveEvent<T>>.Instance;
+            if (isDisposed) { return ImmutableEmptyObservable<CollectionMoveEvent<T>>.Instance; }
             return _collectionMove ?? (_collectionMove = new Subject<CollectionMoveEvent<T>>());
         }
 
         [NonSerialized] private Subject<CollectionRemoveEvent<T>> _collectionRemove = null;
         public IObservable<CollectionRemoveEvent<T>> ObserveRemove()
         {
-            if (isDisposed) return ImmutableEmptyObservable<CollectionRemoveEvent<T>>.Instance;
+            if (isDisposed) { return ImmutableEmptyObservable<CollectionRemoveEvent<T>>.Instance; }
             return _collectionRemove ?? (_collectionRemove = new Subject<CollectionRemoveEvent<T>>());
         }
 
         [NonSerialized] private Subject<CollectionReplaceEvent<T>> _collectionReplace = null;
         public IObservable<CollectionReplaceEvent<T>> ObserveReplace()
         {
-            if (isDisposed) return ImmutableEmptyObservable<CollectionReplaceEvent<T>>.Instance;
+            if (isDisposed) { return ImmutableEmptyObservable<CollectionReplaceEvent<T>>.Instance; }
             return _collectionReplace ?? (_collectionReplace = new Subject<CollectionReplaceEvent<T>>());
         }
 
-        void DisposeSubject<TSubject>(ref Subject<TSubject> subject)
+        private void DisposeSubject<TSubject>(ref Subject<TSubject> subject)
         {
             if (subject == null) { return; }
             

@@ -17,14 +17,17 @@ namespace SystemsRx.MicroRx.Observers
 
         public void OnCompleted()
         {
+            // Nothing to complete
         }
 
         public void OnError(Exception error)
         {
+            // Nothing to error
         }
 
         public void OnNext(T value)
         {
+            // Nothing to push
         }
     }
 }

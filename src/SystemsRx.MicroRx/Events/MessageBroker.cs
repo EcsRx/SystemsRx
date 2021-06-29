@@ -15,20 +15,18 @@ namespace SystemsRx.MicroRx.Events
         /// </summary>
         public static readonly IMessageBroker Default = new MessageBroker();
 
-        bool isDisposed;
-        readonly Dictionary<Type, object> notifiers = new Dictionary<Type, object>();
+        private bool _isDisposed;
+        private readonly Dictionary<Type, object> _notifiers = new Dictionary<Type, object>();
 
         public void Publish<T>(T message)
         {
             object notifier;
-            lock (notifiers)
+            lock (_notifiers)
             {
-                if (isDisposed) return;
+                if (_isDisposed) { return; }
 
-                if (!notifiers.TryGetValue(typeof(T), out notifier))
-                {
-                    return;
-                }
+                if (!_notifiers.TryGetValue(typeof(T), out notifier))
+                { return; }
             }
             ((ISubject<T>)notifier).OnNext(message);
         }
@@ -36,29 +34,27 @@ namespace SystemsRx.MicroRx.Events
         public IObservable<T> Receive<T>()
         {
             object notifier;
-            lock (notifiers)
+            lock (_notifiers)
             {
-                if (isDisposed) throw new ObjectDisposedException("MessageBroker");
+                if (_isDisposed) throw new ObjectDisposedException("MessageBroker");
 
-                if (!notifiers.TryGetValue(typeof(T), out notifier))
-                {
-                    var n = new Subject<T>();
-                    notifier = n;
-                    notifiers.Add(typeof(T), notifier);
-                }
+                if (_notifiers.TryGetValue(typeof(T), out notifier)) 
+                { return ((IObservable<T>) notifier); }
+                
+                var n = new Subject<T>();
+                notifier = n;
+                _notifiers.Add(typeof(T), notifier);
             }
             return ((IObservable<T>)notifier);
         }
 
         public void Dispose()
         {
-            lock (notifiers)
+            lock (_notifiers)
             {
-                if (!isDisposed)
-                {
-                    isDisposed = true;
-                    notifiers.Clear();
-                }
+                if (_isDisposed) { return; }
+                _isDisposed = true;
+                _notifiers.Clear();
             }
         }
     }
