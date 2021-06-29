@@ -70,4 +70,4 @@ There is a book available which covers the main parts which can be found here:
 [codacy-image]: https://app.codacy.com/project/badge/Grade/eb08368251df43c98aa55a8cbb8d5577
 [codacy-url]: https://www.codacy.com/gh/EcsRx/SystemsRx/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/SystemsRx&amp;utm_campaign=Badge_Grade
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
-[gitbook-url]: https://ecsrx.gitbook.io/systemsrx/
+[gitbook-url]: https://ecsrx.gitbook.io/systemsrx/v/main/
