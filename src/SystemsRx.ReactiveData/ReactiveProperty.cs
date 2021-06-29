@@ -37,7 +37,8 @@ namespace SystemsRx.ReactiveData
                     _canPublishValueOnSubscribe = true;
                     SetValue(value);
 
-                    if (_isDisposed) return; // don't notify but set value
+                    if (_isDisposed) { return; }
+                    
                     var p = _publisher;
                     p?.OnNext(this._value);
                     return;
@@ -94,7 +95,7 @@ namespace SystemsRx.ReactiveData
         {
             SetValue(value);
 
-            if (_isDisposed) return;
+            if (_isDisposed) { return; }
 
             var p = _publisher;
             p?.OnNext(this._value);

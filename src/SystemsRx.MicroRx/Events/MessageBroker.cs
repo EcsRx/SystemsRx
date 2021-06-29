@@ -36,7 +36,8 @@ namespace SystemsRx.MicroRx.Events
             object notifier;
             lock (_notifiers)
             {
-                if (_isDisposed) throw new ObjectDisposedException("MessageBroker");
+                if (_isDisposed) 
+                { throw new ObjectDisposedException("MessageBroker"); }
 
                 if (_notifiers.TryGetValue(typeof(T), out notifier)) 
                 { return ((IObservable<T>) notifier); }

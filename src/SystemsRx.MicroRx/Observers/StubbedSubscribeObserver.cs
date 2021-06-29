@@ -18,6 +18,7 @@ namespace SystemsRx.MicroRx.Observers
 
         public void OnNext(T value)
         {
+            // Stub doesnt do anything
         }
 
         public void OnError(Exception error)

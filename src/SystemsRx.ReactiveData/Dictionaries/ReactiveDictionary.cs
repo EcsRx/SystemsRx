@@ -77,7 +77,8 @@ namespace SystemsRx.ReactiveData.Dictionaries
 
         public bool Remove(TKey key)
         {
-            if (!_inner.TryGetValue(key, out var oldValue)) return false;
+            if (!_inner.TryGetValue(key, out var oldValue)) 
+            { return false; }
             
             var isSuccessRemove = _inner.Remove(key);
             if (!isSuccessRemove) 
