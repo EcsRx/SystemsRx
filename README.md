@@ -23,17 +23,51 @@ A general system execution framework with additional layers for `Application` sc
 
 ## Quick Start
 
-It is advised to look at the [setup docs](./docs/introduction/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
+You have 3 system conventions out of the box, `IBasicSystem`, `IManualSystem` and `IReactToEventSystem`. They can be mixed and matched and when added to the `ISystemExecutor` they will be triggered as expected.
 
-If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity) as that has not been fully mapped over to use this core version yet so is its own eco system until that jump is made.
+> It is advised to look at the [setup docs](./docs/introduction/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
 
-### Simple components
+### `IBasicSystem`
 
 ```csharp
-public class HealthComponent : IComponent
+public class SayHelloSystem : IBasicSystem
 {
-    public int CurrentHealth { get; set; }
-    public int MaxHealth { get; set; }
+    // Triggered every time the IUpdateScheduler ticks (default 60 fps)
+    public void Execute(ElapsedTime elapsedTime)
+    {
+        Console.WriteLine($"System says hello @ {elapsedTime.TotalTime.ToString()}");
+    }
+}
+```
+
+### `IReactToEventSystem`
+```csharp
+public class ReactToPlayerDeadEventSystem : IReactToEventSystem<PlayerDeadEvent>
+{
+    // Triggered when the IEventSystem gets a PlayerDeadEvent
+    public void Process(PlayerDeadEvent eventData)
+    {
+        Console.WriteLine("Oh no the player has died");
+    }
+}
+```
+
+### `IManualSystem`
+
+```csharp
+public class StartGameManualSystem : IManualSystem
+{
+    // Triggered when the system is first registered
+    public void StartSystem()
+    {
+        Console.WriteLine("Game Has Started");
+    }
+        
+    // Triggered when the system is removed/stopped
+    public void StopSystem()
+    {
+        Console.WriteLine("Game Has Ended");
+    }
 }
 ```
 
