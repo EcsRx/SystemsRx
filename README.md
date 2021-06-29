@@ -2,6 +2,7 @@
 A general system execution framework with additional layers for `Application` scenarios with DI abstraction and plugin support.
 
 [![Build Status][build-status-image]][build-status-url]
+[![Code Quality Status][codacy-image]][codacy-url]
 [![License][license-image]][license-url]
 [![Nuget Version][nuget-image]][nuget-url]
 [![Join Discord Chat][discord-image]][discord-url]
@@ -41,3 +42,5 @@ The 2 main libraries here are **SystemsRx** and **SystemsRx.Infrastructure**, th
 [discord-url]: https://discord.gg/bS2rnGz
 [license-image]: https://img.shields.io/github/license/ecsrx/ecsrx.svg
 [license-url]: https://github.com/EcsRx/systemsrx/blob/master/LICENSE
+[codacy-image]: https://app.codacy.com/project/badge/Grade/eb08368251df43c98aa55a8cbb8d5577
+[codacy-url]: https://www.codacy.com/gh/EcsRx/SystemsRx/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/SystemsRx&amp;utm_campaign=Badge_Grade
