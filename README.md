@@ -79,11 +79,17 @@ The architecture is layered so you can use the core parts without needing the ad
 
 This is a bare bones rx implementation, it literally just contains some basic `Subject` and other related rx classes, this is so that we do not have a dependencies on rx.net or unirx in the core.
 
+### SystemsRx
+
+This takes the barebones rx implementation and creates a basic `ISystem` convention with an `ISystemExecutor` and `IConventionalSystemHandler` implementations to provide basic systems interfaces (As shown in quick start above).
+
+While this can be used alone for basic systems you can build your own conventions on top of here, such as `EcsRx` which adds an ECS paradigm on top of SystemsRx.
+
 ### Infrastructure
 
-SystemsRx is a really just the Systems aspect of the ECS paradigm without any dependencies on Entites or Components. It allows you create your own conventions for systems as well as make use of the infrastructure layer which provides a DI abstraction layer, Plugin support and some best practice classes.
+This allows you to make use of the infrastructure layer which provides a DI abstraction layer, Plugin support and some best practice classes.
 
-The 2 main libraries here are **SystemsRx** and **SystemsRx.Infrastructure**, these only have a dependency on **MicroRx**
+> The 2 main libraries here are **SystemsRx** and **SystemsRx.Infrastructure**, these only have a dependency on **MicroRx**
 
 ## Docs
 
