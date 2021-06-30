@@ -23,7 +23,7 @@ namespace SystemsRx.Executor.Handlers.Conventional
         {
             EventSystem = eventSystem;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _setupSystemGenericMethodInfo = typeof(ReactToEventSystemHandler).GetMethod(nameof(SetupSystemGeneric), BindingFlags.Instance);
+            _setupSystemGenericMethodInfo = typeof(ReactToEventSystemHandler).GetMethod(nameof(SetupSystemGeneric));
         }
 
         public bool CanHandleSystem(ISystem system)
