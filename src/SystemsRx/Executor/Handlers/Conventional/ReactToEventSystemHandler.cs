@@ -23,7 +23,7 @@ namespace SystemsRx.Executor.Handlers.Conventional
         {
             EventSystem = eventSystem;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _setupSystemGenericMethodInfo = typeof(ReactToEventSystemHandler).GetMethod(nameof(SetupSystemGeneric), BindingFlags.Instance | BindingFlags.NonPublic);
+            _setupSystemGenericMethodInfo = typeof(ReactToEventSystemHandler).GetMethod(nameof(SetupSystemGeneric), BindingFlags.Instance);
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -48,7 +48,7 @@ namespace SystemsRx.Executor.Handlers.Conventional
             _systemSubscriptions.Add(system, new CompositeDisposable(disposables));
         }
 
-        private IDisposable SetupSystemGeneric<T>(IReactToEventSystem<T> system)
+        public IDisposable SetupSystemGeneric<T>(IReactToEventSystem<T> system)
         { return EventSystem.Receive<T>().Subscribe(system.Process); }
         
         public void DestroySystem(ISystem system)
