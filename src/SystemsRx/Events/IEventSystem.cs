@@ -21,7 +21,7 @@ namespace SystemsRx.Events
         /// <param name="message">The message content to send</param>
         /// <typeparam name="T">The type of the content to send</typeparam>
         /// <returns>A task for the published message</returns>
-        Task PublishAsync<T>(T message);
+        void PublishAsync<T>(T message);
         
         /// <summary>
         /// Listens out for any messages of a given type to be published
