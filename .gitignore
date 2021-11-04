@@ -8,3 +8,5 @@ packages/
 *.nupkg
 /src/.vs
 /src/EcsRx.PerformanceTests/BenchmarkDotNet.Artifacts
+
+.vscode/

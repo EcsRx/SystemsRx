@@ -99,6 +99,10 @@ There is a book available which covers the main parts which can be found here:
 
 > This is basically just the [docs folder](docs) in a fancy viewer
 
+## Community Plugins/Extensions
+
+This can all be found within the [docs here](./docs/others/third-party-content.md)
+
 [build-status-image]: https://ci.appveyor.com/api/projects/status/6incybkqawq9qe7u?svg=true
 [build-status-url]: https://ci.appveyor.com/project/grofit/systemsrx/branch/main
 [nuget-image]: https://img.shields.io/nuget/v/systemsrx.svg
