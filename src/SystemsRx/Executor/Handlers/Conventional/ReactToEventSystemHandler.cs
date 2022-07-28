@@ -32,8 +32,8 @@ namespace SystemsRx.Executor.Handlers.Conventional
         public Type[] GetMatchingInterfaces(ISystem system)
         { return system.GetGenericInterfacesFor(typeof(IReactToEventSystem<>)).ToArray(); }
         
-        public Type GetEventTypeFromSystem(ISystem system)
-        { return system.GetGenericDataType(typeof(IReactToEventSystem<>)); }
+        public IEnumerable<Type> GetEventTypesFromSystem(ISystem system)
+        { return system.GetGenericDataTypes(typeof(IReactToEventSystem<>)); }
 
         public void SetupSystem(ISystem system)
         {

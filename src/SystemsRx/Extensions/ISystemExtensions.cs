@@ -26,13 +26,13 @@ namespace SystemsRx.Extensions
         public static bool MatchesSystemTypeWithGeneric(this ISystem system, Type systemType)
         { return GetGenericInterfacesFor(system, systemType).Any(); }
         
-        public static Type GetGenericDataType(this ISystem system, Type systemType)
+        public static IEnumerable<Type> GetGenericDataTypes(this ISystem system, Type systemType)
         {
             var matchingInterface = GetGenericInterfaceType(system, systemType);
-            return matchingInterface.GetGenericArguments()[0];
+            return matchingInterface.Select(x => x.GetGenericArguments()[0]);
         }
 
-        public static Type GetGenericInterfaceType(this ISystem system, Type systemType)
+        public static IEnumerable<Type> GetGenericInterfaceType(this ISystem system, Type systemType)
         { return system.GetType().GetMatchingInterfaceGenericTypes(systemType); }
         
         public static bool IsReactToEventSystem(this ISystem system)

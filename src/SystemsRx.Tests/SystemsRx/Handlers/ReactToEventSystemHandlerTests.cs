@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using SystemsRx.Events;
 using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.MicroRx.Subjects;
@@ -13,6 +14,8 @@ namespace SystemsRx.Tests.SystemsRx.Handlers
 {
     public class ReactToEventSystemHandlerTests
     {
+        public interface MultipleOfSameInterface : IReactToEventSystem<int>, IReactToEventSystem<float>{}
+        
         [Fact]
         public void should_correctly_handle_systems()
         {
@@ -44,15 +47,30 @@ namespace SystemsRx.Tests.SystemsRx.Handlers
         }
 
         [Fact]
-        public void should_get_event_type_from_system()
+        public void should_get_event_types_from_system()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
             var mockSystem = Substitute.For<IReactToEventSystem<int>>();
             
             var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var actualType = systemHandler.GetEventTypeFromSystem(mockSystem);
+            var actualTypes = systemHandler.GetEventTypesFromSystem(mockSystem).ToArray();
             
-            Assert.Equal(typeof(int), actualType);
+            Assert.Equal(1, actualTypes.Length);
+            Assert.Equal(typeof(int), actualTypes[0]);
+        }
+        
+        [Fact]
+        public void should_get_multiple_event_types_from_system()
+        {
+            var mockEventSystem = Substitute.For<IEventSystem>();
+            var mockSystem = Substitute.For<MultipleOfSameInterface>();
+            
+            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
+            var actualTypes = systemHandler.GetEventTypesFromSystem(mockSystem).ToArray();
+            
+            Assert.Equal(2, actualTypes.Length);
+            Assert.Contains(typeof(int), actualTypes);
+            Assert.Contains(typeof(float), actualTypes);
         }
 
         [Fact]
