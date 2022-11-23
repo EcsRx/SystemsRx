@@ -8,13 +8,13 @@ namespace SystemsRx.Extensions
         public static void DisposeAll(this IEnumerable<IDisposable> disposables)
         {
             foreach(var disposable in disposables)
-            { disposable.Dispose(); }
+            { disposable?.Dispose(); }
         }
 
         public static void DisposeAll<T>(this IDictionary<T, IDisposable> disposables)
         {
             foreach(var disposable in disposables.Values)
-            { disposable.Dispose(); }
+            { disposable?.Dispose(); }
         }
         
         public static IDisposable AddTo(this IDisposable currentDisposable, ICollection<IDisposable> disposables)
