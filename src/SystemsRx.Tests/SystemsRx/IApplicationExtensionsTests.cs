@@ -27,10 +27,10 @@ namespace SystemsRx.Tests.SystemsRx
                 highestPrioritySetupSystem,
             };
 
-            var mockContainer = Substitute.For<IDependencyContainer>();
+            var mockContainer = Substitute.For<IDependencyResolver>();
             var mockApplication = Substitute.For<ISystemsRxApplication>();
             mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.Container.Returns(mockContainer);
+            mockApplication.DependencyResolver.Returns(mockContainer);
 
             var orderedSystems = ISystemsRxApplicationExtensions.GetAllBoundSystems(mockApplication).ToList();
 

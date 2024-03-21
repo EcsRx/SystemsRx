@@ -10,7 +10,7 @@ namespace SystemsRx.Infrastructure.Plugins
         string Name { get; }
         Version Version { get; }
 
-        void SetupDependencies(IDependencyContainer container);
-        IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container);
+        void SetupDependencies(IDependencyRegistry registry);
+        IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver);
     }
 }

@@ -57,7 +57,7 @@ namespace SystemsRx.Infrastructure.Dependencies
             return this;
         }
 
-        public BindingBuilder OnActivation(Action<IDependencyContainer, object> activation)
+        public BindingBuilder OnActivation(Action<IDependencyResolver, object> activation)
         {
             _configuration.OnActivation = activation;
             return this;
@@ -86,7 +86,7 @@ namespace SystemsRx.Infrastructure.Dependencies
             return this;
         }
         
-        public BindingBuilder<TFrom> ToMethod<TTo>(Func<IDependencyContainer, TTo> method) where TTo : TFrom
+        public BindingBuilder<TFrom> ToMethod<TTo>(Func<IDependencyResolver, TTo> method) where TTo : TFrom
         {
             if(_configuration.ToInstance != null)
             { throw new BindingException("Cannot use method when an instance has been provided already"); }

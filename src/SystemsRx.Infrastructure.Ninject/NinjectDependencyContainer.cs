@@ -21,7 +21,7 @@ namespace SystemsRx.Infrastructure.Ninject
     /// plugins you ideally want to stick to the methods exposed on the interface
     /// to make your stuff cross platform.
     /// </summary>
-    public class NinjectDependencyContainer : IDependencyContainer
+    public class NinjectDependencyContainer : IDependencyRegistry, IDependencyResolver
     {
         private readonly IKernel _kernel;
 
@@ -31,7 +31,10 @@ namespace SystemsRx.Infrastructure.Ninject
         }
 
         public object NativeContainer => _kernel;
-        
+
+        public object NativeRegistry => _kernel;
+        public object NativeResolver => _kernel;
+
         public void Bind(Type fromType, Type toType, BindingConfiguration configuration = null)
         {
             var bindingSetup = _kernel.Bind(fromType);

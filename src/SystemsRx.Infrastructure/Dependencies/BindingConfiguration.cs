@@ -5,13 +5,12 @@ namespace SystemsRx.Infrastructure.Dependencies
 {
     public class BindingConfiguration
     {
-
         public bool AsSingleton { get; set; }  
         public string WithName { get; set; }
         public object ToInstance { get; set; }
         public IList<Type> WhenInjectedInto { get; set; }
-        public Func<IDependencyContainer, object> ToMethod { get; set; }
-        public Action<IDependencyContainer, object> OnActivation { get; set; }
+        public Func<IDependencyResolver, object> ToMethod { get; set; }
+        public Action<IDependencyResolver, object> OnActivation { get; set; }
         public IDictionary<string, object> WithNamedConstructorArgs { get; }
         public IDictionary<Type, object> WithTypedConstructorArgs { get; }
 

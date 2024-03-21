@@ -11,11 +11,11 @@ namespace SystemsRx.Plugins.Computeds
         public string Name => "SystemsRx Computeds";
         public Version Version { get; } = new Version("1.0.0");
         
-        public void SetupDependencies(IDependencyContainer container)
+        public void SetupDependencies(IDependencyRegistry container)
         {
             // Nothing needs registering
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver container) => Array.Empty<ISystem>();
     }
 }

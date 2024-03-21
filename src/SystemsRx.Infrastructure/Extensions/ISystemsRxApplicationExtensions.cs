@@ -43,7 +43,7 @@ namespace SystemsRx.Infrastructure.Extensions
                     WithName = applicableSystemType.Name
                 };
                 
-                application.Container.Bind(systemType, applicableSystemType,  bindingConfiguration);
+                application.DependencyRegistry.Bind(systemType, applicableSystemType,  bindingConfiguration);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SystemsRx.Infrastructure.Extensions
                     WithName = applicableSystemType.Name
                 };
                 
-                application.Container.Bind(systemType, applicableSystemType,  bindingConfiguration);
+                application.DependencyRegistry.Bind(systemType, applicableSystemType,  bindingConfiguration);
             }
         }
         
@@ -122,7 +122,7 @@ namespace SystemsRx.Infrastructure.Extensions
         /// <remarks>This is really for runtime usage, in mose cases you will want to bind in starting and register in started</remarks>
         public static void BindAndStartSystem<T>(this ISystemsRxApplication application) where T : ISystem
         {
-            application.Container.Bind<ISystem, T>(x => x.WithName(typeof(T).Name));
+            application.DependencyRegistry.Bind<ISystem, T>(x => x.WithName(typeof(T).Name));
             StartSystem<T>(application);
         }
 
@@ -134,12 +134,8 @@ namespace SystemsRx.Infrastructure.Extensions
         /// <typeparam name="T">The implementation of ISystem to register</typeparam>
         public static void StartSystem<T>(this ISystemsRxApplication application) where T : ISystem
         {
-            ISystem groupSystem;
-            
-            if(application.Container.HasBinding<ISystem>(typeof(T).Name))
-            { groupSystem = application.Container.Resolve<ISystem>(typeof(T).Name); }
-            else
-            { groupSystem = application.Container.Resolve<T>(); }
+            var groupSystem = application.DependencyResolver.Resolve<ISystem>(typeof(T).Name) 
+                              ?? application.DependencyResolver.Resolve<T>();
             
             application.SystemExecutor.AddSystem(groupSystem);
         }
@@ -151,7 +147,7 @@ namespace SystemsRx.Infrastructure.Extensions
         /// <remarks>This ordering will be purely by priority</remarks>
         public static IEnumerable<ISystem> GetAllBoundSystems(this ISystemsRxApplication application)
         {
-            var allSystems = application.Container.ResolveAll<ISystem>();
+            var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
             return allSystems.OrderByPriority();
         }
         
