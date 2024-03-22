@@ -14,9 +14,9 @@ namespace SystemsRx.Infrastructure.Ninject
 
         private readonly IKernel _kernel;
 
-        public NinjectDependencyResolver(IKernel kernel = null)
+        public NinjectDependencyResolver(IKernel kernel)
         {
-            _kernel = kernel ?? new StandardKernel();
+            _kernel = kernel;
         }
         
         public IEnumerable ResolveAll(Type type)

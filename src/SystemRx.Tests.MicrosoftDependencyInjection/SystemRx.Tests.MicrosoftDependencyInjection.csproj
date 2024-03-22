@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>SystemsRx.Tests.MicrosoftDependencyInjection</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+        <PackageReference Include="xunit" Version="2.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="SanityTests\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
+    </ItemGroup>
+
+
+</Project>
