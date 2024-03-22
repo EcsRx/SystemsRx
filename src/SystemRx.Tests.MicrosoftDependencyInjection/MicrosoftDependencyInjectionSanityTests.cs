@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SystemsRx.Executor.Handlers;
+using SystemsRx.Infrastructure.Exceptions;
 using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Infrastructure.Modules;
 using SystemsRx.Infrastructure.MicrosoftDependencyInjection;
@@ -24,6 +25,21 @@ namespace SystemsRx.Tests.MicrosoftDependencyInjection
                 
             var timeTracker = resolver.Resolve<ITimeTracker>();
             Assert.NotNull(timeTracker);
+        }
+
+        [Fact]
+        public void should_throw_exception_if_using_constructor_args()
+        {
+            var diRegistry = new MicrosoftDependencyRegistry();
+            try
+            {
+                diRegistry.Bind<ITimeTracker>(x => x.WithConstructorArg("test", 10));
+                Assert.Fail("Exception was not called");
+            }
+            catch (BindingException ex)
+            {
+                Assert.Contains("does not support", ex.Message);
+            }
         }
     }
 }
