@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace SystemsRx.Infrastructure.Dependencies;
 
+/// <summary>
+/// Provides a cross platform way to resolve any dependencies that have been registered
+/// </summary>
 public interface IDependencyResolver : IDisposable
 {
     /// <summary>

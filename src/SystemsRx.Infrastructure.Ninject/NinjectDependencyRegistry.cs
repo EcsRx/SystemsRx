@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using SystemsRx.Extensions;
 using SystemsRx.Infrastructure.Dependencies;
@@ -9,31 +8,20 @@ using Ninject.Syntax;
 namespace SystemsRx.Infrastructure.Ninject
 {
     /// <summary>
-    /// This is a ninject implementation for the dependency container.
-    /// 
-    /// As with all the dependency container implementations, you should implement
-    /// a basic way to bind/resolve/resolveall but as some DI config may be more
-    /// complex the underlying container should be exposed to the consumer so they
-    /// can make use of native features if needed.
-    /// 
-    /// One thing to mention though is if any native container calls are used
-    /// they will only be compatible with that dependency container, so when making
-    /// plugins you ideally want to stick to the methods exposed on the interface
-    /// to make your stuff cross platform.
+    /// This is a ninject implementation for the dependency registry.
     /// </summary>
-    public class NinjectDependencyContainer : IDependencyRegistry, IDependencyResolver
+    public class NinjectDependencyRegistry : IDependencyRegistry
     {
         private readonly IKernel _kernel;
-
-        public NinjectDependencyContainer(IKernel kernel = null)
+            
+        public NinjectDependencyRegistry(IKernel kernel = null)
         {
             _kernel = kernel ?? new StandardKernel();
+            Resolver = new NinjectDependencyResolver(_kernel);
         }
 
-        public object NativeContainer => _kernel;
-
         public object NativeRegistry => _kernel;
-        public object NativeResolver => _kernel;
+        public IDependencyResolver Resolver { get; }
 
         public void Bind(Type fromType, Type toType, BindingConfiguration configuration = null)
         {
@@ -50,7 +38,7 @@ namespace SystemsRx.Infrastructure.Ninject
             if (configuration.ToInstance != null)
             { binding = bindingSetup.ToConstant(configuration.ToInstance); }
             else if (configuration.ToMethod != null)
-            { binding = bindingSetup.ToMethod(x => configuration.ToMethod(this)); }
+            { binding = bindingSetup.ToMethod(x => configuration.ToMethod(Resolver)); }
             else
             {
                 binding = bindingSetup.To(toType);
@@ -69,7 +57,7 @@ namespace SystemsRx.Infrastructure.Ninject
             { binding.Named(configuration.WithName); }
 
             if (configuration.OnActivation != null)
-            { binding.OnActivation(instance => configuration.OnActivation(this, instance)); }
+            { binding.OnActivation(instance => configuration.OnActivation(Resolver, instance)); }
 
             if (configuration.WhenInjectedInto.Count != 0)
             { configuration.WhenInjectedInto.ForEachRun(x => binding.WhenInjectedInto(x)); }
@@ -88,22 +76,14 @@ namespace SystemsRx.Infrastructure.Ninject
             return applicableBindings.Any(x => x.Metadata.Name == name);
         }
 
-        public object Resolve(Type type, string name = null)
-        {
-            if(string.IsNullOrEmpty(name))
-            { return _kernel.Get(type); }
-
-            return _kernel.Get(type, name);
-        }
-
         public void Unbind(Type type)
         { _kernel.Unbind(type); }
 
-        public IEnumerable ResolveAll(Type type)
-        { return _kernel.GetAll(type); }
-
         public void LoadModule(IDependencyModule module)
         { module.Setup(this); }
+
+        public IDependencyResolver BuildResolver()
+        { return Resolver; }
 
         public void Dispose()
         { _kernel?.Dispose(); }

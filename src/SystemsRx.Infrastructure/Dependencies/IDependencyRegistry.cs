@@ -3,14 +3,15 @@
 namespace SystemsRx.Infrastructure.Dependencies
 {
     /// <summary>
-    /// This represents a cross platform way of managing dependencies.
-    /// 
+    /// This represents a cross platform way of registering dependencies for resolving later
+    /// </summary>
+    /// <remarks>
     /// It is up to the consumer to implement the actual underlying handler
     /// for unity it will be done out of the box with Zenject, but in other
     /// platforms like Monogame, Godot etc it would be up to the consumer
     /// to define what DI system they want to use and create an implementation
     /// themselves.
-    /// </summary>
+    /// </remarks>
     public interface IDependencyRegistry : IDisposable
     {
         /// <summary>
@@ -54,5 +55,11 @@ namespace SystemsRx.Infrastructure.Dependencies
         /// </summary>
         /// <param name="module">Type of module to load</param>
         void LoadModule(IDependencyModule module);
+
+        /// <summary>
+        /// Finalizes the registry and builds a resolver for use
+        /// </summary>
+        /// <returns>The resolver to be used in resolving dependencies</returns>
+        IDependencyResolver BuildResolver();
     }
 }
