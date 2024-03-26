@@ -18,15 +18,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="SanityTests\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\SystemsRx.Infrastructure.MicrosoftDependencyInjection\SystemsRx.Infrastructure.MicrosoftDependencyInjection.csproj" />
     </ItemGroup>
 
 

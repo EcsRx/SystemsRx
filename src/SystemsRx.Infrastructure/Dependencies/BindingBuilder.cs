@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using SystemsRx.Extensions;
 using SystemsRx.Infrastructure.Exceptions;
 
 namespace SystemsRx.Infrastructure.Dependencies
@@ -26,48 +24,6 @@ namespace SystemsRx.Infrastructure.Dependencies
             _configuration.WithName = name;
             return this;
         }       
-        
-        public BindingBuilder WithConstructorArg(string argName, object argValue)
-        {
-            _configuration.WithNamedConstructorArgs.Add(argName, argValue);
-            return this;
-        }
-        
-        public BindingBuilder WithConstructorArg<T>(T argValue)
-        {
-            _configuration.WithTypedConstructorArgs.Add(typeof(T), argValue);
-            return this;
-        }
-        
-        public BindingBuilder WithConstructorArg(Type argType, object argValue)
-        {
-            _configuration.WithTypedConstructorArgs.Add(argType, argValue);
-            return this;
-        }
-        
-        public BindingBuilder WhenInjectedInto<T>()
-        {
-            _configuration.WhenInjectedInto.Add(typeof(T));
-            return this;
-        }
-        
-        public BindingBuilder WhenInjectedInto(Type argType)
-        {
-            _configuration.WhenInjectedInto.Add(argType);
-            return this;
-        }
-
-        public BindingBuilder OnActivation(Action<IDependencyResolver, object> activation)
-        {
-            _configuration.OnActivation = activation;
-            return this;
-        }
-        
-        public BindingBuilder WhenInjectedInto(IEnumerable<Type> argType)
-        {
-            argType.ForEachRun(_configuration.WhenInjectedInto.Add);
-            return this;
-        }
         
         internal BindingConfiguration Build()
         {

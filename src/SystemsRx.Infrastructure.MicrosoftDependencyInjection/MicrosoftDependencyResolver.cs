@@ -21,7 +21,10 @@ namespace SystemsRx.Infrastructure.MicrosoftDependencyInjection
         }
         
         public IEnumerable ResolveAll(Type type)
-        { return _serviceProvider.GetServices(type); }
+        { 
+            var services = _serviceProvider.GetServices(type); 
+            return services;
+        }
 
         public object Resolve(Type type, string name = null)
         {

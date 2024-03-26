@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SystemsRx.Infrastructure.Dependencies;
-using SystemsRx.Infrastructure.Exceptions;
 
 namespace SystemsRx.Infrastructure.MicrosoftDependencyInjection
 {
     /// <summary>
-    /// This is a ninject implementation for the dependency registry.
+    /// This is a microsoft DI implementation for the dependency registry.
     /// </summary>
     public class MicrosoftDependencyRegistry : IDependencyRegistry
     {
@@ -27,7 +27,7 @@ namespace SystemsRx.Infrastructure.MicrosoftDependencyInjection
                 _serviceCollection.AddSingleton(fromType, toType);
                 return;
             }
-
+            
             var serviceLifetime = configuration.AsSingleton ? ServiceLifetime.Singleton : ServiceLifetime.Transient;
             ServiceDescriptor serviceDescriptor;
             
@@ -35,20 +35,22 @@ namespace SystemsRx.Infrastructure.MicrosoftDependencyInjection
             { serviceDescriptor = new ServiceDescriptor(fromType, configuration.WithName, configuration.ToInstance); }
             else if (configuration.ToMethod != null)
             {
-                serviceDescriptor = new ServiceDescriptor(fromType, configuration.WithName, (x, _) =>
-                {
-                    var resolution = configuration.ToInstance ?? configuration.ToMethod(_resolver);
-                    configuration.OnActivation?.Invoke(_resolver, resolution);
-                    return resolution;
-                }, serviceLifetime);
+                serviceDescriptor = new ServiceDescriptor(fromType, configuration.WithName, 
+                    (x, _) => configuration.ToMethod(_resolver), serviceLifetime);
             }
             else
-            {
-                throw new BindingException(
-                    "Microsoft Dependency Injection does not support constructor parameters, it is recommended you manually build it via a method");
-            }
+            { serviceDescriptor = new ServiceDescriptor(fromType, configuration.WithName, toType, serviceLifetime); }
             
             _serviceCollection.Add(serviceDescriptor);
+            
+            // HACK: MS DI isolates keyed vs non keyed so to sidestep that we need to add a non keyed proxy lookup
+            if (string.IsNullOrEmpty(configuration.WithName)) { return; }
+            
+            if (configuration.AsSingleton)
+            { _serviceCollection.AddSingleton(fromType, x => (x as IKeyedServiceProvider)?.GetKeyedService(fromType, configuration.WithName)); }
+            else
+            { _serviceCollection.AddTransient(fromType, x => (x as IKeyedServiceProvider)?.GetKeyedService(fromType, configuration.WithName)); }
+            
         }
 
         public void Bind(Type type, BindingConfiguration configuration = null)
