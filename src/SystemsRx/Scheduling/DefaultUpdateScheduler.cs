@@ -22,9 +22,9 @@ namespace SystemsRx.Scheduling
         public IObservable<ElapsedTime> OnPreUpdate => _onPreUpdate;
         public IObservable<ElapsedTime> OnPostUpdate => _onPostUpdate;
         
-        public DefaultUpdateScheduler(int desiredFps = 60)
+        public DefaultUpdateScheduler(int updateFrequencyPerSecond = 60)
         {
-            _timer = new Timer { Interval = 1000f / desiredFps };
+            _timer = new Timer { Interval = 1000f / updateFrequencyPerSecond };
             _timer.Elapsed += UpdateTick;
 
             _previousDateTime = DateTime.Now;

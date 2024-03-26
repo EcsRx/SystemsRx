@@ -19,7 +19,8 @@ namespace SystemsRx.Infrastructure
 
         private readonly List<ISystemsRxPlugin> _plugins;
 
-        public abstract IDependencyContainer Container { get; }
+        public abstract IDependencyRegistry DependencyRegistry { get; }
+        public abstract IDependencyResolver DependencyResolver { get; }
 
         protected SystemsRxApplication()
         {
@@ -41,8 +42,11 @@ namespace SystemsRx.Infrastructure
             ApplicationStarted();
         }
 
+        /// <summary>
+        /// This stops all systems
+        /// </summary>
         public virtual void StopApplication()
-        { StopAndUnbindAllSystems(); }
+        { StopSystems(); }
 
         /// <summary>
         /// Load any modules that your application needs
@@ -53,7 +57,7 @@ namespace SystemsRx.Infrastructure
         /// </remarks>
         protected virtual void LoadModules()
         {
-            Container.LoadModule(new FrameworkModule());
+            DependencyRegistry.LoadModule(new FrameworkModule());
         }
 
         /// <summary>
@@ -68,8 +72,8 @@ namespace SystemsRx.Infrastructure
         /// <remarks>By default it will setup SystemExecutor, EventSystem, EntityCollectionManager</remarks>
         protected virtual void ResolveApplicationDependencies()
         {
-            SystemExecutor = Container.Resolve<ISystemExecutor>();
-            EventSystem = Container.Resolve<IEventSystem>();
+            SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
+            EventSystem = DependencyResolver.Resolve<IEventSystem>();
         }
 
         /// <summary>
@@ -79,11 +83,10 @@ namespace SystemsRx.Infrastructure
         protected virtual void BindSystems()
         { this.BindAllSystemsWithinApplicationScope(); }
 
-        protected virtual void StopAndUnbindAllSystems()
+        protected virtual void StopSystems()
         {
             var allSystems = SystemExecutor.Systems.ToList();
             allSystems.ForEachRun(SystemExecutor.RemoveSystem);
-            Container.Unbind<ISystem>();
         }
 
         /// <summary>
@@ -96,11 +99,11 @@ namespace SystemsRx.Infrastructure
         protected abstract void ApplicationStarted();
 
         protected void SetupPlugins()
-        { Plugins.ForEachRun(x => x.SetupDependencies(Container)); }
+        { Plugins.ForEachRun(x => x.SetupDependencies(DependencyRegistry)); }
 
         protected void StartPluginSystems()
         {
-            Plugins.SelectMany(x => x.GetSystemsForRegistration(Container))
+            Plugins.SelectMany(x => x.GetSystemsForRegistration(DependencyResolver))
                 .ForEachRun(SystemExecutor.AddSystem);
         }
 

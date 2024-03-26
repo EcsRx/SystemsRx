@@ -12,17 +12,17 @@ namespace SystemsRx.Infrastructure.Modules
 {
     public class FrameworkModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Bind<IMessageBroker, MessageBroker>();
-            container.Bind<IEventSystem, EventSystem>();
-            container.Bind<IThreadHandler, DefaultThreadHandler>();
-            container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
-            container.Bind<IConventionalSystemHandler, BasicSystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToEventSystemHandler>();
-            container.Bind<ISystemExecutor, SystemExecutor>();
-            container.Bind<IUpdateScheduler, DefaultUpdateScheduler>();
-            container.Bind<ITimeTracker>(x => x.ToBoundType(typeof(IUpdateScheduler)));
+            registry.Bind<IMessageBroker, MessageBroker>();
+            registry.Bind<IEventSystem, EventSystem>();
+            registry.Bind<IThreadHandler, DefaultThreadHandler>();
+            registry.Bind<IConventionalSystemHandler, ManualSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, BasicSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToEventSystemHandler>();
+            registry.Bind<ISystemExecutor, SystemExecutor>();
+            registry.Bind<IUpdateScheduler, DefaultUpdateScheduler>();
+            registry.Bind<ITimeTracker>(x => x.ToBoundType(typeof(IUpdateScheduler)));
         }
     }
 }

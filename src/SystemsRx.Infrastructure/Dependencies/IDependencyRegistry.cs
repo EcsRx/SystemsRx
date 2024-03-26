@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections;
 
 namespace SystemsRx.Infrastructure.Dependencies
 {
     /// <summary>
-    /// This represents a cross platform way of managing dependencies.
-    /// 
+    /// This represents a cross platform way of registering dependencies for resolving later
+    /// </summary>
+    /// <remarks>
     /// It is up to the consumer to implement the actual underlying handler
     /// for unity it will be done out of the box with Zenject, but in other
     /// platforms like Monogame, Godot etc it would be up to the consumer
     /// to define what DI system they want to use and create an implementation
     /// themselves.
-    /// </summary>
-    public interface IDependencyContainer : IDisposable
+    /// </remarks>
+    public interface IDependencyRegistry : IDisposable
     {
         /// <summary>
         /// This exposes the underlying DI container, but any calls to this directly
         /// will not be cross platform, so be weary if you need it or not.
         /// </summary>
-        object NativeContainer { get; }
+        object NativeRegistry { get; }
 
         /// <summary>
         /// Binds from one type to another, generally from an interface to a concrete class
@@ -45,30 +45,21 @@ namespace SystemsRx.Infrastructure.Dependencies
         bool HasBinding(Type type, string name = null);
 
         /// <summary>
-        /// Gets an instance of a given type from the underlying DI container
-        /// </summary>
-        /// <param name="type">Type of the object you want</param>
-        /// <param name="name">Optional name of the binding</param>
-        /// <returns>An instance of the given type</returns>
-        object Resolve(Type type, string name = null);
-
-        /// <summary>
         /// Unbinds a type from the container
         /// </summary>
         /// <param name="type">The type to unbind</param>
         void Unbind(Type type);
         
         /// <summary>
-        /// Gets an enumerable of a given type from the underlying DI container
-        /// </summary>
-        /// <param name="type">Type to resolve</param>
-        /// <returns>All matching instances of that type within the underlying container</returns>
-        IEnumerable ResolveAll(Type type);
-        
-        /// <summary>
         /// Loads the given modules bindings into the underlying di container
         /// </summary>
         /// <param name="module">Type of module to load</param>
         void LoadModule(IDependencyModule module);
+
+        /// <summary>
+        /// Finalizes the registry and builds a resolver for use
+        /// </summary>
+        /// <returns>The resolver to be used in resolving dependencies</returns>
+        IDependencyResolver BuildResolver();
     }
 }

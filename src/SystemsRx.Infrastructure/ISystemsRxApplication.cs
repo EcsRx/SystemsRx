@@ -12,10 +12,16 @@ namespace SystemsRx.Infrastructure
     public interface ISystemsRxApplication
     {
         /// <summary>
-        /// The dependency injection container
+        /// The dependency injection registry
         /// </summary>
         /// <remarks>This will abstract away the underlying DI system, in most cases you wont need it</remarks>
-        IDependencyContainer Container { get; }
+        IDependencyRegistry DependencyRegistry { get; }
+        
+        /// <summary>
+        /// The dependency injection resolver
+        /// </summary>
+        /// <remarks>This will abstract away the underlying DI system, in most cases you wont need it</remarks>
+        IDependencyResolver DependencyResolver { get; }
         
         /// <summary>
         /// The system executor, this orchestrates the systems

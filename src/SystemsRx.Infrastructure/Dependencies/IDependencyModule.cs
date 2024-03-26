@@ -15,7 +15,7 @@
         /// <summary>
         /// The entry point where you can setup all your binding config
         /// </summary>
-        /// <param name="container">The container to bind with</param>
-        void Setup(IDependencyContainer container);
+        /// <param name="registry">The registry to bind with</param>
+        void Setup(IDependencyRegistry registry);
     }
 }
