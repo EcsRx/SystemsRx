@@ -20,7 +20,7 @@ namespace SystemsRx.Infrastructure
         private readonly List<ISystemsRxPlugin> _plugins;
 
         public abstract IDependencyRegistry DependencyRegistry { get; }
-        public abstract IDependencyResolver DependencyResolver { get; }
+        public IDependencyResolver DependencyResolver { get; protected set; }
 
         protected SystemsRxApplication()
         {
@@ -35,8 +35,10 @@ namespace SystemsRx.Infrastructure
             LoadModules();
             LoadPlugins();
             SetupPlugins();
-            ResolveApplicationDependencies();
             BindSystems();
+
+            DependencyResolver = DependencyRegistry.BuildResolver();
+            ResolveApplicationDependencies();
             StartPluginSystems();
             StartSystems();
             ApplicationStarted();
