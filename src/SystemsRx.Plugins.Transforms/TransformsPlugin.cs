@@ -8,7 +8,7 @@ namespace SystemsRx.Plugins.Transforms
 {
     public class TransformsPlugin : ISystemsRxPlugin
     {
-        public string Name => "Transforms Plugin";
+        public string Name => "SystemsRx Transforms";
         public Version Version { get; } = new Version("1.0.0");
 
         public void SetupDependencies(IDependencyRegistry registry)
