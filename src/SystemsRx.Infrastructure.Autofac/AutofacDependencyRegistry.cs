@@ -23,7 +23,7 @@ namespace SystemsRx.Infrastructure.Autofac
         {
             if (configuration == null)
             {
-                _containerBuilder.RegisterType(toType).As(fromType);
+                _containerBuilder.RegisterType(toType).As(fromType).SingleInstance();
                 return;
             }
 

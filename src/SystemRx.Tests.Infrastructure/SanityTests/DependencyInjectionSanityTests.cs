@@ -77,5 +77,18 @@ namespace SystemsRx.Tests.Ninject.SanityTests
             var timeTracker = resolver.Resolve<ITimeTracker>();
             Assert.NotNull(timeTracker);
         }
+
+        [Theory]
+        [MemberData(nameof(Registries))]
+        public void should_always_return_singletons_by_default(IDependencyRegistry registryType)
+        {
+            registryType.Bind<ITestInterface, TestClass1>();
+            var resolver = registryType.BuildResolver();
+
+            var firstResolution = resolver.Resolve<ITestInterface>();
+            var secondResolution = resolver.Resolve<ITestInterface>();
+            
+            Assert.Same(firstResolution, secondResolution);
+        }
     }
 }
