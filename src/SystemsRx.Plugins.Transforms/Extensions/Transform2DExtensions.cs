@@ -6,9 +6,9 @@ namespace SystemsRx.Plugins.Transforms.Extensions
 {
     public static class Transform2DExtensions
     {
-        const float RadiansToDegrees = 180.0f / MathF.PI;
-        const float DegreesToRadians = MathF.PI / 180.0f;
-        const float Radian90Degrees = 90 * DegreesToRadians;
+        public const float RadiansToDegrees = 180.0f / MathF.PI;
+        public const float DegreesToRadians = MathF.PI / 180.0f;
+        public const float Radian90Degrees = 90 * DegreesToRadians;
         
         /// <summary>
         /// Returns the transforms rotation but converted to degrees

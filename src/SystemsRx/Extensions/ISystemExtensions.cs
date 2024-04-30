@@ -37,5 +37,8 @@ namespace SystemsRx.Extensions
         
         public static bool IsReactToEventSystem(this ISystem system)
         { return system.MatchesSystemTypeWithGeneric(typeof(IReactToEventSystem<>)); }
+        
+        public static bool IsReactiveSystem(this ISystem system)
+        { return system.MatchesSystemTypeWithGeneric(typeof(IReactiveSystem<>)); }
     }
 }
