@@ -72,7 +72,7 @@ namespace SystemsRx.Tests.Ninject.SanityTests
             var systems = resolver.ResolveAll<IConventionalSystemHandler>();
             Assert.NotNull(systems);
             Assert.NotEmpty(systems);
-            Assert.Equal(3, systems.Count());
+            Assert.Equal(4, systems.Count());
                 
             var timeTracker = resolver.Resolve<ITimeTracker>();
             Assert.NotNull(timeTracker);

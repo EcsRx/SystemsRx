@@ -12,7 +12,7 @@ namespace SystemsRx.Systems.Conventional
     public interface IBasicSystem : ISystem
     {
         /// <summary>
-        /// The processor to handle the entity
+        /// The method to execute every update
         /// </summary>
         void Execute(ElapsedTime elapsedTime);
     }

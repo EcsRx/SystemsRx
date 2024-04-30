@@ -20,6 +20,7 @@ namespace SystemsRx.Infrastructure.Modules
             registry.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             registry.Bind<IConventionalSystemHandler, BasicSystemHandler>();
             registry.Bind<IConventionalSystemHandler, ReactToEventSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactiveSystemHandler>();
             registry.Bind<ISystemExecutor, SystemExecutor>();
             registry.Bind<IUpdateScheduler, DefaultUpdateScheduler>();
             registry.Bind<ITimeTracker>(x => x.ToBoundType(typeof(IUpdateScheduler)));
