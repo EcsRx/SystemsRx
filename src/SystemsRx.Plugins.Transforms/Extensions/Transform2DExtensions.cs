@@ -55,7 +55,7 @@ namespace SystemsRx.Plugins.Transforms.Extensions
         public static float GetLookAt(this Transform2D source, Vector2 destination)
         {
             var direction = source.Position - destination;
-            return source.Rotation = MathF.Atan2(direction.Y, direction.X);
+            return MathF.Atan2(direction.Y, direction.X);
         }
     }
 }
