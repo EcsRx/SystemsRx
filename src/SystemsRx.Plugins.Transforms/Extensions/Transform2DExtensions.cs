@@ -53,9 +53,6 @@ namespace SystemsRx.Plugins.Transforms.Extensions
         /// <returns>The rotation to look at the given position</returns>
         /// <remarks>It doesnt apply directly as you may want to lerp/slerp the value yourself before applying</remarks>
         public static float GetLookAt(this Transform2D source, Vector2 destination)
-        {
-            var direction = source.Position - destination;
-            return MathF.Atan2(direction.Y, direction.X);
-        }
+        { return source.Position.GetAngleFor(destination); }
     }
 }
