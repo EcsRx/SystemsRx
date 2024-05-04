@@ -26,8 +26,9 @@ namespace SystemsRx.Plugins.Transforms.Extensions
         /// </summary>
         /// <param name="source">The source position</param>
         /// <param name="destination">The destination to look at</param>
+        /// <param name="offsetInRadians">Optional offset applied to the calculation, 0 by default but different coordinate systems may need offsets applied</param>
         /// <returns>Returns the angle (in radians) needed to look at the given destination position</returns>
-        public static float GetAngleFor(this Vector2 source, Vector2 destination)
-        { return (destination - source).ToRadians(); }
+        public static float GetAngleFor(this Vector2 source, Vector2 destination, float offsetInRadians = 0f)
+        { return (destination - source).ToRadians() + offsetInRadians; }
     }
 }

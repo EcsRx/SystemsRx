@@ -35,16 +35,17 @@ namespace SystemsRx.Plugins.Transforms.Extensions
         /// </summary>
         /// <param name="source">The transform to operate on</param>
         /// <param name="destination">The destination to look at</param>
+        /// <param name="upAxis">The up axis</param>
         /// <returns>The rotation to look at the given position</returns>
         /// <remarks>It doesnt apply directly as you may want to lerp/slerp the value yourself before applying</remarks>
-        public static Quaternion GetLookAt(this Transform source, Vector3 destination)
+        public static Quaternion GetLookAt(this Transform source, Vector3 destination, Vector3 upAxis)
         {
             var direction = Vector3.Normalize(destination - source.Position);
             var forward = Forward(source);
             var dot = Vector3.Dot(forward, direction);
 
             if (MathF.Abs(dot - (-1.0f)) < 0.000001f)
-            { return new Quaternion(Vector3.UnitY, MathF.PI); }
+            { return new Quaternion(upAxis, MathF.PI); }
             if (Math.Abs(dot - (1.0f)) < 0.000001f)
             { return Quaternion.Identity; }
 
@@ -53,5 +54,15 @@ namespace SystemsRx.Plugins.Transforms.Extensions
             rotAxis = Vector3.Normalize(rotAxis);
             return Quaternion.CreateFromAxisAngle(rotAxis, rotAngle);
         }
+        
+        /// <summary>
+        /// Generates the rotation needed to look at the given destination
+        /// </summary>
+        /// <param name="source">The transform to operate on</param>
+        /// <param name="destination">The destination to look at</param>
+        /// <returns>The rotation to look at the given position</returns>
+        /// <remarks>It doesnt apply directly as you may want to lerp/slerp the value yourself before applying</remarks>
+        public static Quaternion GetLookAt(this Transform source, Vector3 destination)
+        { return GetLookAt(source, destination, Vector3.UnitY); }
     }
 }

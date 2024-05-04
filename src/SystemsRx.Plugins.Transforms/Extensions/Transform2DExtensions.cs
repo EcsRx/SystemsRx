@@ -50,9 +50,10 @@ namespace SystemsRx.Plugins.Transforms.Extensions
         /// </summary>
         /// <param name="source">The transform to operate on</param>
         /// <param name="destination">The destination to look at</param>
+        /// <param name="offsetInRadians">Optional offset applied to the calculation, 0 by default but different coordinate systems may need offsets applied</param>
         /// <returns>The rotation to look at the given position</returns>
         /// <remarks>It doesnt apply directly as you may want to lerp/slerp the value yourself before applying</remarks>
-        public static float GetLookAt(this Transform2D source, Vector2 destination)
-        { return source.Position.GetAngleFor(destination); }
+        public static float GetLookAt(this Transform2D source, Vector2 destination, float offsetInRadians = 0f)
+        { return source.Position.GetAngleFor(destination, offsetInRadians); }
     }
 }
