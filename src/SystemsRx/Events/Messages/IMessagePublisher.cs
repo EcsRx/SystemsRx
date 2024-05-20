@@ -1,4 +1,4 @@
-﻿namespace SystemsRx.MicroRx.Events
+namespace SystemsRx.Events.Messages
 {
     public interface IMessagePublisher
     {

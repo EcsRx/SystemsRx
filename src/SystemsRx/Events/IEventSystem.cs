@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using R3;
 
 namespace SystemsRx.Events
 {
@@ -28,6 +29,6 @@ namespace SystemsRx.Events
         /// </summary>
         /// <typeparam name="T">The type of the message to listen out for</typeparam>
         /// <returns></returns>
-        IObservable<T> Receive<T>();
+        Observable<T> Receive<T>();
     }
 }

@@ -1,5 +1,4 @@
-using SystemsRx.MicroRx;
-using SystemsRx.MicroRx.Extensions;
+using R3;
 using SystemsRx.Tests.Plugins.Computeds.Models;
 using Xunit;
 
@@ -47,28 +46,12 @@ namespace SystemsRx.Tests.Plugins.Computeds
         }
         
         [Fact]
-        public void should_not_refresh_data_when_changed_but_no_subs_or_value_requests()
-        {
-            var expectedData = 10;
-            var data = new DummyData{Data = expectedData};
-            
-            var computedData = new TestComputedFromData(data);
-
-            data.Data = 20;
-            computedData.ManuallyRefresh.OnNext(Unit.Default);
-            
-            Assert.Equal(expectedData, computedData.CachedData);      
-        }        
-        
-        [Fact]
         public void should_refresh_data_when_changed_with_subs()
         {
             var expectedData = 10;
             var data = new DummyData{Data = 20};
             
             var computedData = new TestComputedFromData(data);
-            computedData.Subscribe(x => { });
-            
             data.Data = expectedData;
             computedData.ManuallyRefresh.OnNext(Unit.Default);
             

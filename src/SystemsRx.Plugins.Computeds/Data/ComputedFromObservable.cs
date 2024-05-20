@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
+using R3;
 using SystemsRx.Computeds;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 
 namespace SystemsRx.Plugins.Computeds.Data
 {
@@ -14,9 +13,9 @@ namespace SystemsRx.Plugins.Computeds.Data
         
         private readonly Subject<TOutput> _onDataChanged;
         
-        public IObservable<TInput> DataSource { get; }
+        public Observable<TInput> DataSource { get; }
 
-        public ComputedFromObservable(IObservable<TInput> dataSource, TOutput initialValue = default(TOutput))
+        public ComputedFromObservable(Observable<TInput> dataSource, TOutput initialValue = default(TOutput))
         {
             DataSource = dataSource;
             CachedData = initialValue;
@@ -26,7 +25,7 @@ namespace SystemsRx.Plugins.Computeds.Data
             MonitorChanges();
         }
                 
-        public IDisposable Subscribe(IObserver<TOutput> observer)
+        public IDisposable Subscribe(Observer<TOutput> observer)
         { return _onDataChanged.Subscribe(observer); }
 
         public TOutput Value => GetData();

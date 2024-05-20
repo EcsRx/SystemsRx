@@ -20,6 +20,8 @@
       <Name>EcsRx.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\SystemsRx.Plugins.Computeds\SystemsRx.Plugins.Computeds.csproj" />
-    <ProjectReference Include="..\SystemsRx.ReactiveData\SystemsRx.ReactiveData.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sanity\" />
   </ItemGroup>
 </Project>

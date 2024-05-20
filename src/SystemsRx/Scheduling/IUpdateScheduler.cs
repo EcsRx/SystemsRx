@@ -1,11 +1,12 @@
 using System;
+using R3;
 
 namespace SystemsRx.Scheduling
 {
     public interface IUpdateScheduler : ITimeTracker, IDisposable
     {
-        IObservable<ElapsedTime> OnPreUpdate { get; }
-        IObservable<ElapsedTime> OnUpdate { get; }
-        IObservable<ElapsedTime> OnPostUpdate { get; }
+        Observable<ElapsedTime> OnPreUpdate { get; }
+        Observable<ElapsedTime> OnUpdate { get; }
+        Observable<ElapsedTime> OnPostUpdate { get; }
     }
 }

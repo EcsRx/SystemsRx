@@ -17,12 +17,6 @@ namespace SystemsRx.Extensions
             { disposable?.Dispose(); }
         }
         
-        public static IDisposable AddTo(this IDisposable currentDisposable, ICollection<IDisposable> disposables)
-        {
-            disposables.Add(currentDisposable);
-            return currentDisposable;
-        }
-        
         public static IDisposable AddTo<T>(this IDisposable currentDisposable, IDictionary<T, IDisposable> disposables, T key)
         {
             disposables.Add(key, currentDisposable);

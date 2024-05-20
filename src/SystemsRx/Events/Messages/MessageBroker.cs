@@ -1,20 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 
-/*
- *    This code was taken from UniRx project by neuecc
- *    https://github.com/neuecc/UniRx
- */
-namespace SystemsRx.MicroRx.Events
+namespace SystemsRx.Events.Messages
 {
     public class MessageBroker : IMessageBroker, IDisposable
     {
-        /// <summary>
-        /// MessageBroker in Global scope.
-        /// </summary>
-        public static readonly IMessageBroker Default = new MessageBroker();
-
         private bool _isDisposed;
         private readonly Dictionary<Type, object> _notifiers = new Dictionary<Type, object>();
 
@@ -31,7 +22,7 @@ namespace SystemsRx.MicroRx.Events
             ((ISubject<T>)notifier).OnNext(message);
         }
 
-        public IObservable<T> Receive<T>()
+        public Observable<T> Receive<T>()
         {
             object notifier;
             lock (_notifiers)
@@ -40,13 +31,13 @@ namespace SystemsRx.MicroRx.Events
                 { throw new ObjectDisposedException("MessageBroker"); }
 
                 if (_notifiers.TryGetValue(typeof(T), out notifier)) 
-                { return ((IObservable<T>) notifier); }
+                { return ((Observable<T>) notifier); }
                 
                 var n = new Subject<T>();
                 notifier = n;
                 _notifiers.Add(typeof(T), notifier);
             }
-            return ((IObservable<T>)notifier);
+            return ((Observable<T>)notifier);
         }
 
         public void Dispose()

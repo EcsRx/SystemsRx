@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
+using R3;
 using SystemsRx.Computeds;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 
 namespace SystemsRx.Plugins.Computeds.Data
 {
@@ -14,7 +12,7 @@ namespace SystemsRx.Plugins.Computeds.Data
         protected readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<TOutput> _onDataChanged;
-        private bool _needsUpdate;
+        private bool _isUpdating;
         
         public TInput DataSource { get; }
 
@@ -28,7 +26,7 @@ namespace SystemsRx.Plugins.Computeds.Data
             RefreshData();
         }
                 
-        public IDisposable Subscribe(IObserver<TOutput> observer)
+        public IDisposable Subscribe(Observer<TOutput> observer)
         { return _onDataChanged.Subscribe(observer); }
 
         public TOutput Value => GetData();
@@ -40,10 +38,8 @@ namespace SystemsRx.Plugins.Computeds.Data
 
         public void RequestUpdate(object _ = null)
         {
-            _needsUpdate = true;
-            
-            if(_onDataChanged.HasObservers)
-            { RefreshData(); }
+            _isUpdating = true;
+            RefreshData();
         }
 
         public void RefreshData()
@@ -53,7 +49,7 @@ namespace SystemsRx.Plugins.Computeds.Data
             
             CachedData = newData;
             _onDataChanged.OnNext(CachedData);
-            _needsUpdate = false;
+            _isUpdating = false;
         }
         
         /// <summary>
@@ -65,7 +61,7 @@ namespace SystemsRx.Plugins.Computeds.Data
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract IObservable<Unit> RefreshWhen();
+        public abstract Observable<Unit> RefreshWhen();
         
         /// <summary>
         /// The method to generate given data from the data source
@@ -76,7 +72,7 @@ namespace SystemsRx.Plugins.Computeds.Data
 
         public TOutput GetData()
         {
-            if(_needsUpdate)
+            if(_isUpdating)
             { RefreshData(); }
 
             return CachedData;

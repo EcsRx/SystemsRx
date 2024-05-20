@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SystemsRx.MicroRx\SystemsRx.MicroRx.csproj" />
+      <PackageReference Include="R3" Version="1.1.11" />
     </ItemGroup>
 
 </Project>

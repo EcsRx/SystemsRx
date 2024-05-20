@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using R3;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
-
 namespace SystemsRx.Plugins.Computeds.Collections
 {
     public abstract class ComputedCollectionFromData<TInput, TOutput> : IComputedCollection<TOutput>, IDisposable
@@ -18,7 +16,7 @@ namespace SystemsRx.Plugins.Computeds.Collections
         public int Count => ComputedData.Count;
         
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
-        private bool _needsUpdate;
+        private bool _isUpdating;
 
         public ComputedCollectionFromData(TInput dataSource)
         {
@@ -33,26 +31,22 @@ namespace SystemsRx.Plugins.Computeds.Collections
         }
         
         
-        public IDisposable Subscribe(IObserver<IEnumerable<TOutput>> observer)
+        public IDisposable Subscribe(Observer<IEnumerable<TOutput>> observer)
         { return onDataChanged.Subscribe(observer); }
         
         public void MonitorChanges()
-        {            
-            RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
-        }
+        { RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions); }
 
         public void RequestUpdate(object _ = null)
         {
-            _needsUpdate = true;
-            
-            if(onDataChanged.HasObservers)
-            { RefreshData(); }
+            _isUpdating = true;
+            RefreshData();
         }
         
         public void RefreshData()
         {
             Transform(DataSource);
-            _needsUpdate = false;
+            _isUpdating = false;
         }
 
         /// <summary>
@@ -64,7 +58,7 @@ namespace SystemsRx.Plugins.Computeds.Collections
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract IObservable<bool> RefreshWhen();     
+        public abstract Observable<bool> RefreshWhen();     
         
         /// <summary>
         /// The method to populate ComputedData and raise events from the data source
@@ -80,7 +74,7 @@ namespace SystemsRx.Plugins.Computeds.Collections
 
         public IEnumerable<TOutput> GetData()
         {
-            if(_needsUpdate)
+            if(_isUpdating)
             { RefreshData(); }
             
             return ComputedData;

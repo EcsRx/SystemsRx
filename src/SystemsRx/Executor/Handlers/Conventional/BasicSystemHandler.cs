@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using SystemsRx.Attributes;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
 using SystemsRx.Scheduling;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
+using R3;
 
 namespace SystemsRx.Executor.Handlers.Conventional
 {
@@ -27,7 +27,7 @@ namespace SystemsRx.Executor.Handlers.Conventional
         public void SetupSystem(ISystem system)
         {
             var castSystem = (IBasicSystem)system;
-            var subscription = UpdateScheduler.OnUpdate.Subscribe(castSystem.Execute);
+            var subscription = UpdateScheduler.OnUpdate.Subscribe(x => castSystem.Execute(x));
             _systemSubscriptions.Add(system, subscription);
         }
         

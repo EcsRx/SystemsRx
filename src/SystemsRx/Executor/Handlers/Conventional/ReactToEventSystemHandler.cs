@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using R3;
 using SystemsRx.Attributes;
 using SystemsRx.Events;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 
@@ -49,7 +48,7 @@ namespace SystemsRx.Executor.Handlers.Conventional
         }
 
         public IDisposable SetupSystemGeneric<T>(IReactToEventSystem<T> system)
-        { return EventSystem.Receive<T>().Subscribe(system.Process); }
+        { return EventSystem.Receive<T>().Subscribe(x => system.Process(x)); }
         
         public void DestroySystem(ISystem system)
         { _systemSubscriptions.RemoveAndDispose(system); }

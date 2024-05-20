@@ -1,10 +1,10 @@
 ﻿using SystemsRx.Events;
+using SystemsRx.Events.Messages;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
-using SystemsRx.MicroRx.Events;
 using SystemsRx.Scheduling;
 using SystemsRx.Threading;
 

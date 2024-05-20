@@ -1,4 +1,4 @@
-using System;
+using R3;
 
 namespace SystemsRx.Systems.Conventional
 {
@@ -8,7 +8,7 @@ namespace SystemsRx.Systems.Conventional
         /// Returns and observable indicating when the system should execute
         /// </summary>
         /// <returns>Observable indicating when the system should execute</returns>
-        IObservable<T> ReactTo();
+        Observable<T> ReactTo();
         
         /// <summary>
         /// Thhe method to execute on triggering

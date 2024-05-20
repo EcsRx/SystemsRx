@@ -2,12 +2,12 @@ using System;
 using System.Linq;
 using SystemsRx.Events;
 using SystemsRx.Executor.Handlers.Conventional;
-using SystemsRx.MicroRx.Subjects;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using SystemsRx.Tests.Models;
 using SystemsRx.Tests.SystemsRx.Handlers.Helpers;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace SystemsRx.Tests.SystemsRx.Handlers

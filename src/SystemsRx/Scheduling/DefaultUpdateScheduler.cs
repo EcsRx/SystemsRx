@@ -1,6 +1,6 @@
 using System;
 using System.Timers;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 
 namespace SystemsRx.Scheduling
 {
@@ -18,9 +18,9 @@ namespace SystemsRx.Scheduling
         private readonly Subject<ElapsedTime> _onPostUpdate = new Subject<ElapsedTime>();
 
         public ElapsedTime ElapsedTime { get; private set; }
-        public IObservable<ElapsedTime> OnUpdate => _onUpdate;
-        public IObservable<ElapsedTime> OnPreUpdate => _onPreUpdate;
-        public IObservable<ElapsedTime> OnPostUpdate => _onPostUpdate;
+        public Observable<ElapsedTime> OnUpdate => _onUpdate;
+        public Observable<ElapsedTime> OnPreUpdate => _onPreUpdate;
+        public Observable<ElapsedTime> OnPostUpdate => _onPostUpdate;
         
         public DefaultUpdateScheduler(int updateFrequencyPerSecond = 60)
         {

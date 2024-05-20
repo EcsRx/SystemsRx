@@ -1,13 +1,9 @@
 using System;
-using System.Linq;
 using NSubstitute;
-using SystemsRx.Events;
+using R3;
 using SystemsRx.Executor.Handlers.Conventional;
-using SystemsRx.MicroRx.Subjects;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
-using SystemsRx.Tests.Models;
-using SystemsRx.Tests.SystemsRx.Handlers.Helpers;
 using Xunit;
 
 namespace SystemsRx.Tests.SystemsRx.Handlers

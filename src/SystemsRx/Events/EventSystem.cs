@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using SystemsRx.MicroRx.Events;
+﻿using R3;
+using SystemsRx.Events.Messages;
 using SystemsRx.Threading;
 
 namespace SystemsRx.Events
@@ -22,7 +21,7 @@ namespace SystemsRx.Events
         public void PublishAsync<T>(T message)
         { ThreadHandler.Run(() => MessageBroker.Publish(message)); }
 
-        public IObservable<T> Receive<T>()
+        public Observable<T> Receive<T>()
         { return MessageBroker.Receive<T>(); }
 
     }

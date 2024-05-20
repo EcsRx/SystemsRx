@@ -1,12 +1,12 @@
-﻿using System;
+using R3;
 
-namespace SystemsRx.MicroRx.Events
+namespace SystemsRx.Events.Messages
 {
     public interface IMessageReceiver
     {
         /// <summary>
         /// Subscribe typed message.
         /// </summary>
-        IObservable<T> Receive<T>();
+        Observable<T> Receive<T>();
     }
 }

@@ -1,6 +1,4 @@
-using System;
-using SystemsRx.MicroRx;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 using SystemsRx.Plugins.Computeds.Data;
 
 namespace SystemsRx.Tests.Plugins.Computeds.Models
@@ -17,7 +15,7 @@ namespace SystemsRx.Tests.Plugins.Computeds.Models
         public TestComputedFromData(DummyData data) : base(data)
         {}
 
-        public override IObservable<Unit> RefreshWhen()
+        public override Observable<Unit> RefreshWhen()
         { return ManuallyRefresh; }
 
         public override int Transform(DummyData data)

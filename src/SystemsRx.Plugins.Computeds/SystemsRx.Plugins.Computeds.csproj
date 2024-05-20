@@ -13,7 +13,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SystemsRx.MicroRx\SystemsRx.MicroRx.csproj" />
       <ProjectReference Include="..\SystemsRx\SystemsRx.csproj" />
       <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj" />
     </ItemGroup>
