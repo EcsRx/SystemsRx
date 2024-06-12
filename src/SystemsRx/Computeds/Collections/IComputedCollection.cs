@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using SystemsRx.Computeds;
-using SystemsRx.Plugins.Computeds.Collections.Events;
 
-namespace SystemsRx.Plugins.Computeds.Collections
+namespace SystemsRx.Computeds.Collections
 {
     /// <summary>
     /// Represents a computed collection of elements

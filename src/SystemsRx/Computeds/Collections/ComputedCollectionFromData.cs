@@ -5,7 +5,7 @@ using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 
-namespace SystemsRx.Plugins.Computeds.Collections
+namespace SystemsRx.Computeds.Collections
 {
     public abstract class ComputedCollectionFromData<TInput, TOutput> : IComputedCollection<TOutput>, IDisposable
     {

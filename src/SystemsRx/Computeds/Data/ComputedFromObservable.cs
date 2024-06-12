@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using SystemsRx.Computeds;
 using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 
-namespace SystemsRx.Plugins.Computeds.Data
+namespace SystemsRx.Computeds.Data
 {
    public abstract class ComputedFromObservable<TOutput, TInput> : IComputed<TOutput>, IDisposable
     {
