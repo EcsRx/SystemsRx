@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using R3;
 using SystemsRx.Extensions;
-namespace SystemsRx.Plugins.Computeds.Collections
+using SystemsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Subjects;
+
+namespace SystemsRx.Computeds.Collections
 {
     public abstract class ComputedCollectionFromData<TInput, TOutput> : IComputedCollection<TOutput>, IDisposable
     {

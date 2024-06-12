@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -19,7 +19,7 @@
       <Project>{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2}</Project>
       <Name>EcsRx.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SystemsRx.Plugins.Computeds\SystemsRx.Plugins.Computeds.csproj" />
+    <ProjectReference Include="..\SystemsRx.ReactiveData\SystemsRx.ReactiveData.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sanity\" />

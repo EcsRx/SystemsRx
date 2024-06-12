@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using R3;
-using SystemsRx.Computeds;
 using SystemsRx.Extensions;
 
-namespace SystemsRx.Plugins.Computeds.Data
+namespace SystemsRx.Computeds.Data
 {
     public abstract class ComputedFromData<TOutput,TInput> : IComputed<TOutput>, IDisposable
     {
