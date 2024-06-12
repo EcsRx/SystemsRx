@@ -1,7 +1,5 @@
-using System;
+using R3;
 using SystemsRx.Computeds.Data;
-using SystemsRx.MicroRx;
-using SystemsRx.MicroRx.Subjects;
 
 namespace SystemsRx.Tests.Plugins.Computeds.Models
 {
