@@ -37,7 +37,8 @@ namespace SystemsRx.Infrastructure.MicrosoftDependencyInjection
 
         public void Dispose()
         {
-            // Nothing to dispose
+            if(_serviceProvider is IDisposable disposable)
+            { disposable.Dispose(); }
         }
     }
 }
