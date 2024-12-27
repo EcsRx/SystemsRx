@@ -11,6 +11,7 @@ namespace SystemsRx.Computeds.Data
         protected readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<TOutput> _onDataChanged;
+        private readonly object _lock = new object();
         
         public Observable<TInput> DataSource { get; }
 
@@ -35,10 +36,9 @@ namespace SystemsRx.Computeds.Data
 
         public void RefreshData(TInput data)
         {
-            var newData = Transform(data);
-            if (newData.Equals(CachedData)) { return; }
-            
-            CachedData = newData;
+            lock(_lock)
+            { CachedData = Transform(data); }
+         
             _onDataChanged.OnNext(CachedData);
         }
 

@@ -10,6 +10,7 @@ namespace SystemsRx.Pools
         
         private int _lastMax;
         private readonly int _increaseSize;
+        private readonly object _lock = new object();
         
         public readonly List<int> AvailableIds;
 
@@ -22,13 +23,16 @@ namespace SystemsRx.Pools
 
         public int AllocateInstance()
         {
-            if(AvailableIds.Count == 0)
-            { Expand(); }
+            lock (_lock)
+            {
+                if(AvailableIds.Count == 0)
+                { Expand(); }
             
-            var id = AvailableIds[0];
-            AvailableIds.RemoveAt(0);
+                var id = AvailableIds[0];
+                AvailableIds.RemoveAt(0);
 
-            return id;
+                return id;
+            }
         }
 
         public bool IsAvailable(int id)
@@ -36,21 +40,27 @@ namespace SystemsRx.Pools
 
         public void AllocateSpecificId(int id)
         {
-            if(id > _lastMax)
-            { Expand(id); }
+            lock (_lock)
+            {
+                if(id > _lastMax)
+                { Expand(id); }
 
-            AvailableIds.Remove(id);
+                AvailableIds.Remove(id);
+            }
         }
 
         public void ReleaseInstance(int id)
         {
             if(id <= 0)
             { throw new ArgumentException("id has to be >= 1"); }
+
+            lock (_lock)
+            {
+                if (id > _lastMax)
+                { Expand(id); }
             
-            if (id > _lastMax)
-            { Expand(id); }
-            
-            AvailableIds.Add(id);
+                AvailableIds.Add(id);
+            }
         }
 
         public void Expand(int? newId = null)

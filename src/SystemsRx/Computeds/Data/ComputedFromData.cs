@@ -43,10 +43,12 @@ namespace SystemsRx.Computeds.Data
 
         public void RefreshData()
         {
-            var newData = Transform(DataSource);
-            if (newData.Equals(CachedData)) { return; }
+            lock (_lock)
+            {
+                CachedData = Transform(DataSource);
+                _needsUpdate = false;
+            }
             
-            CachedData = newData;
             _onDataChanged.OnNext(CachedData);
             _isUpdating = false;
         }
