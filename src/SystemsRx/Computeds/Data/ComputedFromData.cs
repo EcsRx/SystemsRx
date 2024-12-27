@@ -11,7 +11,7 @@ namespace SystemsRx.Computeds.Data
         protected readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<TOutput> _onDataChanged;
-        private bool _isUpdating;
+        private readonly object _lock = new object();
         
         public TInput DataSource { get; }
 
@@ -32,25 +32,15 @@ namespace SystemsRx.Computeds.Data
 
         public void MonitorChanges()
         {
-            RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
-        }
-
-        public void RequestUpdate(object _ = null)
-        {
-            _isUpdating = true;
-            RefreshData();
+            RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions);
         }
 
         public void RefreshData()
         {
             lock (_lock)
-            {
-                CachedData = Transform(DataSource);
-                _needsUpdate = false;
-            }
+            { CachedData = Transform(DataSource); }
             
             _onDataChanged.OnNext(CachedData);
-            _isUpdating = false;
         }
         
         /// <summary>
@@ -72,12 +62,7 @@ namespace SystemsRx.Computeds.Data
         public abstract TOutput Transform(TInput dataSource);
 
         public TOutput GetData()
-        {
-            if(_isUpdating)
-            { RefreshData(); }
-
-            return CachedData;
-        }
+        { return CachedData; }
 
         public virtual void Dispose()
         {

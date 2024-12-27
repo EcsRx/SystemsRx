@@ -64,10 +64,14 @@ namespace SystemsRx.Executor
         
         public void Dispose()
         {
-            for(var i= _systems.Count - 1; i >= 0; i--)
-            { RemoveSystem(_systems[i]); }
+            lock (_lock)
+            {
+                for(var i= _systems.Count - 1; i >= 0; i--)
+                { RemoveSystem(_systems[i]); }
             
-            _systems.Clear();
+                _systems.Clear();
+            }
+            
             _conventionalSystemHandlers.DisposeAll();
         }
     }

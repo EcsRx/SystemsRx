@@ -16,8 +16,9 @@ namespace SystemsRx.Computeds.Collections
         public TOutput this[int index] => ComputedData[index];
         public int Count => ComputedData.Count;
         
+        private readonly object _lock = new object();
+        
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
-        private bool _isUpdating;
 
         public ComputedCollectionFromData(TInput dataSource)
         {
@@ -36,18 +37,12 @@ namespace SystemsRx.Computeds.Collections
         { return onDataChanged.Subscribe(observer); }
         
         public void MonitorChanges()
-        { RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions); }
+        { RefreshWhen().Subscribe(_ => RefreshData()).AddTo(Subscriptions); }
 
-        public void RequestUpdate(object _ = null)
-        {
-            _isUpdating = true;
-            RefreshData();
-        }
-        
         public void RefreshData()
         {
-            Transform(DataSource);
-            _isUpdating = false;
+            lock (_lock)
+            { Transform(DataSource); }
         }
 
         /// <summary>
@@ -74,12 +69,7 @@ namespace SystemsRx.Computeds.Collections
         public abstract void Transform(TInput dataSource);
 
         public IEnumerable<TOutput> GetData()
-        {
-            if(_isUpdating)
-            { RefreshData(); }
-            
-            return ComputedData;
-        }
+        { return ComputedData; }
 
         public IEnumerator<TOutput> GetEnumerator()
         { return GetData().GetEnumerator(); }

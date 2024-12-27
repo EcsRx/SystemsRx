@@ -15,7 +15,7 @@ namespace SystemsRx.Computeds.Data
         
         public Observable<TInput> DataSource { get; }
 
-        public ComputedFromObservable(Observable<TInput> dataSource, TOutput initialValue = default(TOutput))
+        public ComputedFromObservable(Observable<TInput> dataSource, TOutput initialValue = default)
         {
             DataSource = dataSource;
             CachedData = initialValue;
