@@ -12,7 +12,7 @@ namespace SystemsRx.Computeds.Data
         protected readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<TOutput> _onDataChanged;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         
         public IObservable<TInput> DataSource { get; }
 

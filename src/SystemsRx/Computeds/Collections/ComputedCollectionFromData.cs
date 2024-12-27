@@ -19,7 +19,7 @@ namespace SystemsRx.Computeds.Collections
         
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
         private bool _needsUpdate;
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
         public ComputedCollectionFromData(TInput dataSource)
         {

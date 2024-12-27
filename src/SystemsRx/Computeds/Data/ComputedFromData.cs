@@ -14,7 +14,7 @@ namespace SystemsRx.Computeds.Data
         
         private readonly Subject<TOutput> _onDataChanged;
         private bool _needsUpdate;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         
         public TInput DataSource { get; }
 

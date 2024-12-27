@@ -10,7 +10,7 @@ namespace SystemsRx.Pools
         
         private int _lastMax;
         private readonly int _increaseSize;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         
         public readonly List<int> AvailableIds;
 
