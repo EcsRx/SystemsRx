@@ -12,7 +12,7 @@ namespace SystemsRx.Executor
     {
         public readonly IList<ISystem> _systems;
         public readonly IEnumerable<IConventionalSystemHandler> _conventionalSystemHandlers;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         
         public IEnumerable<ISystem> Systems => _systems;
 
