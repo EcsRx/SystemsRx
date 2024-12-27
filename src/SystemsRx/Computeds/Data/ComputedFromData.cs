@@ -14,6 +14,7 @@ namespace SystemsRx.Computeds.Data
         
         private readonly Subject<TOutput> _onDataChanged;
         private bool _needsUpdate;
+        private readonly object _lock = new object();
         
         public TInput DataSource { get; }
 
@@ -47,12 +48,13 @@ namespace SystemsRx.Computeds.Data
 
         public void RefreshData()
         {
-            var newData = Transform(DataSource);
-            if (newData.Equals(CachedData)) { return; }
+            lock (_lock)
+            {
+                CachedData = Transform(DataSource);
+                _needsUpdate = false;
+            }
             
-            CachedData = newData;
             _onDataChanged.OnNext(CachedData);
-            _needsUpdate = false;
         }
         
         /// <summary>
