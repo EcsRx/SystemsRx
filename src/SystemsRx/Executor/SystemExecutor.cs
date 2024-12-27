@@ -12,6 +12,7 @@ namespace SystemsRx.Executor
     {
         public readonly IList<ISystem> _systems;
         public readonly IEnumerable<IConventionalSystemHandler> _conventionalSystemHandlers;
+        private object _lock = new object();
         
         public IEnumerable<ISystem> Systems => _systems;
 
@@ -21,35 +22,44 @@ namespace SystemsRx.Executor
 
             _systems = new List<ISystem>();
         }
-       
+
         public bool HasSystem(ISystem system)
-        { return _systems.Contains(system); }
+        {
+            lock (_lock)
+            { return _systems.Contains(system); }
+        }
         
         public void RemoveSystem(ISystem system)
         {
-            var applicableHandlers = _conventionalSystemHandlers
-                .Where(x => x.CanHandleSystem(system))
-                .OrderByPriority();
-
-            foreach(var handler in applicableHandlers)
-            { handler.DestroySystem(system); }
-            
-            _systems.Remove(system);
+            lock (_lock)
+            {
+              var applicableHandlers = _conventionalSystemHandlers
+                  .Where(x => x.CanHandleSystem(system))
+                  .OrderByPriority();
+  
+              foreach(var handler in applicableHandlers)
+              { handler.DestroySystem(system); }
+              
+              _systems.Remove(system);  
+            }
         }
 
         public void AddSystem(ISystem system)
         {
             if(HasSystem(system))
             { throw new SystemAlreadyRegisteredException(system); }
-            
-            var applicableHandlers = _conventionalSystemHandlers
-                .Where(x => x.CanHandleSystem(system))
-                .OrderByPriority();
 
-            foreach(var handler in applicableHandlers)
-            { handler.SetupSystem(system); }
+            lock (_lock)
+            {
+                var applicableHandlers = _conventionalSystemHandlers
+                    .Where(x => x.CanHandleSystem(system))
+                    .OrderByPriority();
 
-            _systems.Add(system);
+                foreach(var handler in applicableHandlers)
+                { handler.SetupSystem(system); }
+
+                _systems.Add(system);
+            }
         }
         
         public void Dispose()

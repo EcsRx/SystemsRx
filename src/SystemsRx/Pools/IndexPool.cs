@@ -10,6 +10,7 @@ namespace SystemsRx.Pools
         
         private int _lastMax;
         private readonly int _increaseSize;
+        private object _lock = new object();
         
         public readonly Stack<int> AvailableIndexes;
 
@@ -19,24 +20,30 @@ namespace SystemsRx.Pools
             _increaseSize = increaseSize;
             AvailableIndexes = new Stack<int>(Enumerable.Range(0, _lastMax).Reverse());
         }
-
+        
         public int AllocateInstance()
         {
-            if(AvailableIndexes.Count == 0)
-            { Expand(); }
+            lock (_lock)
+            {
+                if(AvailableIndexes.Count == 0)
+                { Expand(); }
             
-            return AvailableIndexes.Pop();
+                return AvailableIndexes.Pop();
+            }
         }
 
         public void ReleaseInstance(int index)
         {
             if(index < 0)
             { throw new ArgumentException("id has to be >= 0"); }
+
+            lock (_lock)
+            {
+                if (index > _lastMax)
+                { Expand(index); }
             
-            if (index > _lastMax)
-            { Expand(index); }
-            
-            AvailableIndexes.Push(index);
+                AvailableIndexes.Push(index);
+            }
         }
 
         public void Expand(int? newIndex = null)
@@ -54,8 +61,11 @@ namespace SystemsRx.Pools
 
         public void Clear()
         {
-            _lastMax = 0;
-            AvailableIndexes.Clear();
+            lock (_lock)
+            {
+                _lastMax = 0;
+                AvailableIndexes.Clear();
+            }
         }
     }
 }

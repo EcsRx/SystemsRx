@@ -19,6 +19,7 @@ namespace SystemsRx.Computeds.Collections
         
         protected readonly Subject<IEnumerable<TOutput>> onDataChanged;
         private bool _needsUpdate;
+        private object _lock = new object();
 
         public ComputedCollectionFromData(TInput dataSource)
         {
@@ -31,7 +32,6 @@ namespace SystemsRx.Computeds.Collections
             MonitorChanges();
             RefreshData();
         }
-        
         
         public IDisposable Subscribe(IObserver<IEnumerable<TOutput>> observer)
         { return onDataChanged.Subscribe(observer); }
@@ -51,8 +51,11 @@ namespace SystemsRx.Computeds.Collections
         
         public void RefreshData()
         {
-            Transform(DataSource);
-            _needsUpdate = false;
+            lock (_lock)
+            {
+                Transform(DataSource);
+                _needsUpdate = false;
+            }
         }
 
         /// <summary>
